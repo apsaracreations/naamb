@@ -1,0 +1,5 @@
+node_modules
+.env
+ApsaraAdmin/node_modules
+ApsaraBackend/node_modules
+Apsaraweb/node_modules
