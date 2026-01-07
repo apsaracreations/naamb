@@ -21,14 +21,7 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 // ✅ Enable CORS for all origins
-app.use(cors({
-  origin: [
-    process.env.CLIENT_URL,
-    process.env.ADMIN_URL
-  ],
-  credentials: true
-}));
-// Just this line is enough to allow all origins
+app.use(cors()); // Just this line is enough to allow all origins
 
 // ✅ MongoDB Connection
 mongoose
@@ -49,8 +42,9 @@ app.use("/api/payment", paymentRoutes);
 
 // 🧩 Define host and port manually
 const PORT = process.env.PORT || 5000;
+const HOST = "192.168.1.2";
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running at http://192.168.1.2:${PORT}`);
 });
 

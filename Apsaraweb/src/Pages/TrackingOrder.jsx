@@ -23,12 +23,14 @@ const formatDate = (isoString) => {
 
 const OrdersTable = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
     if (!token || !user) {
       toast.error("Login required to fetch orders");
+      setLoading(false);
       return;
     }
     const userId = JSON.parse(user).id || JSON.parse(user)._id;
@@ -43,81 +45,126 @@ const OrdersTable = () => {
           toast.error("Failed to load orders");
         }
       })
-      .catch(() => toast.error("Network error fetching orders"));
+      .catch(() => toast.error("Network error fetching orders"))
+      .finally(() => setLoading(false));
   }, []);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10 font-sans">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 mt-4 md:mt-10 font-serif">
       <Toaster position="bottom-center" />
-      <h1 className="text-2xl font-semibold mb-6 text-gray-800 border-b pb-2">
-        Your Orders
-      </h1>
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Product
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Paid Amount
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Quantity
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Booking Date
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Tracking Status
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Tracking ID
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {orders.map((order) => {
-            const product = order.products[0];
-            const hasTracking = Boolean(order.trackingId);
-            return (
-              <tr
-                key={order._id}
-                className="hover:bg-gray-50 transition cursor-pointer"
-              >
-                <td className="px-6 py-4 whitespace-nowrap flex items-center space-x-4">
-                  {product?.image ? (
+      
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 border-b pb-4 gap-2">
+        <h1 className="text-2xl font-bold text-gray-800">Your Orders</h1>
+        <p className="text-sm text-gray-500">{orders.length} orders found</p>
+      </div>
+
+      {orders.length === 0 ? (
+        <div className="text-center py-20 bg-gray-50 rounded-xl border-2 border-dashed">
+          <p className="text-gray-500">You haven't placed any orders yet.</p>
+        </div>
+      ) : (
+        <>
+          {/* --- DESKTOP TABLE VIEW (Visible on md and up) --- */}
+          <div className="hidden md:block overflow-hidden bg-white rounded-xl shadow-sm border border-gray-200">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Product</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Paid</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Qty</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase">Tracking ID</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {orders.map((order) => {
+                  const product = order.products[0];
+                  const hasTracking = Boolean(order.trackingId);
+                  return (
+                    <tr key={order._id} className="hover:bg-gray-50 transition">
+                      <td className="px-6 py-4 flex items-center space-x-4">
+                        <img
+                          src={product?.image ? buildImgSrc(product.image) : "/placeholder.png"}
+                          alt={product?.title}
+                          className="h-12 w-12 rounded-lg object-cover border"
+                        />
+                        <span className="text-gray-900 font-semibold truncate max-w-[200px]">{product?.title}</span>
+                      </td>
+                      <td className="px-6 py-4 font-bold text-gray-900">₹{product?.price}</td>
+                      <td className="px-6 py-4 text-gray-600">{product?.quantity}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">{formatDate(order.createdAt)}</td>
+                      <td className="px-6 py-4">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${hasTracking ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"}`}>
+                          {hasTracking ? order.shippingStatus || "Shipped" : "Processing"}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm font-mono text-gray-600">{order.trackingId || "---"}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* --- MOBILE CARD VIEW (Visible on small screens) --- */}
+          <div className="md:hidden space-y-4">
+            {orders.map((order) => {
+              const product = order.products[0];
+              const hasTracking = Boolean(order.trackingId);
+              return (
+                <div key={order._id} className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center space-x-4 mb-4">
                     <img
-                      src={buildImgSrc(product.image)}
-                      alt={product.name || "product"}
-                      className="h-12 w-12 rounded-md object-cover"
+                      src={product?.image ? buildImgSrc(product.image) : "/placeholder.png"}
+                      alt={product?.title}
+                      className="h-16 w-16 rounded-lg object-cover border"
                     />
-                  ) : (
-                    <div className="h-12 w-12 bg-gray-200 rounded-md flex items-center justify-center text-gray-400 text-sm">
-                      No Image
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-gray-900 font-bold truncate">{product?.title}</h3>
+                      <p className="text-sm text-gray-500">{formatDate(order.createdAt)}</p>
                     </div>
-                  )}
-                  <span className="text-gray-900 font-medium">{product?.title}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap font-semibold text-gray-900">
-                  ₹{product?.price ?? "N/A"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{product?.quantity ?? "N/A"}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatDate(order.createdAt)}</td>
-                <td
-                  className={`px-6 py-4 whitespace-nowrap font-semibold ${
-                    hasTracking ? "text-green-600" : "text-yellow-600"
-                  }`}
-                >
-                  {hasTracking ? order.shippingStatus || "Pending" : "Will be shipped soon"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-700">
-                  {hasTracking ? order.trackingId : "-"}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 py-3 border-t border-b border-gray-50 text-sm">
+                    <div>
+                      <p className="text-gray-400">Paid Amount</p>
+                      <p className="font-bold text-gray-900">₹{product?.price}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400">Quantity</p>
+                      <p className="font-bold text-gray-900">{product?.quantity}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase text-gray-400 font-bold">Status</p>
+                      <span className={`text-xs font-bold ${hasTracking ? "text-green-600" : "text-yellow-600"}`}>
+                        {hasTracking ? order.shippingStatus || "Shipped" : "Processing"}
+                      </span>
+                    </div>
+                    {hasTracking && (
+                      <div className="text-right">
+                        <p className="text-[10px] uppercase text-gray-400 font-bold">Tracking ID</p>
+                        <p className="text-xs font-mono font-bold text-gray-700">{order.trackingId}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 };

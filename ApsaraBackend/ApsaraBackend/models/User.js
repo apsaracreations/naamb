@@ -4,8 +4,11 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+password: { 
+    type: String, 
+    required: function() { return !this.googleId; } // Only required if NOT a google user
   },
+  googleId: { type: String }  },
   { timestamps: true }
 );
 
