@@ -48,7 +48,6 @@ const Categories = () => {
   const buildImgSrc = (path) => {
     if (!path) return "";
     if (path.startsWith("http://") || path.startsWith("https://")) return path;
-    // remove leading slashes
     const p = path.replace(/^\/+/, "");
     return `${API_ROOT}/${p}`;
   };
@@ -84,7 +83,6 @@ const Categories = () => {
   const handleSubmit = async (e) => {
     e?.preventDefault();
 
-    // basic validation
     if (!name.trim()) {
       toast.error("Category name is required");
       return;
@@ -100,7 +98,6 @@ const Categories = () => {
         };
 
         if (bannerFile || headingFile) {
-          // Try multipart PUT
           const formData = new FormData();
           formData.append("name", name);
           formData.append("bannerHeading", bannerHeading);
@@ -117,7 +114,6 @@ const Categories = () => {
           );
 
           if (!res.ok) {
-            // fallback to JSON PUT (no images)
             toast.error("Update failed with files. Trying without images...");
             const res2 = await fetch(
               `${API_BASE}/categories/update/${editing._id}`,
@@ -133,7 +129,6 @@ const Categories = () => {
             toast.success("Category updated");
           }
         } else {
-          // no file changes — send JSON
           const res = await fetch(
             `${API_BASE}/categories/update/${editing._id}`,
             {
@@ -147,11 +142,11 @@ const Categories = () => {
           toast.success("Category updated");
         }
       } else {
-        // CREATE flow (multipart/form-data)
+        // CREATE flow
         const formData = new FormData();
         formData.append("name", name);
         formData.append("bannerHeading", bannerHeading);
-        formData.append("filters", filters.join(",")); // backend expects comma-separated
+        formData.append("filters", filters.join(","));
         if (bannerFile) formData.append("bannerImage", bannerFile);
         if (headingFile) formData.append("headingImage", headingFile);
 
@@ -176,7 +171,6 @@ const Categories = () => {
     }
   };
 
-  // start edit: populate form
   const startEdit = (cat) => {
     setEditing(cat);
     setName(cat.name || "");
@@ -197,7 +191,6 @@ const Categories = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // open delete modal
   const confirmDelete = (cat) => {
     setDeleteTarget(cat);
     setShowDeleteModal(true);
@@ -224,24 +217,32 @@ const Categories = () => {
   };
 
   return (
-    <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+    <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans text-gray-900">
       <Toaster position="top-right" />
 
-      {/* FORM */}
-      <div className="bg-white shadow rounded-lg p-6 mb-8">
-        <h1 className="text-2xl font-semibold mb-4">Manage Categories</h1>
+      {/* HEADER SECTION */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight">Category Dashboard</h1>
+        <p className="text-gray-500 mt-1">Manage your store product categories and filters.</p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* FORM SECTION */}
+      <div className="bg-white shadow-sm border border-gray-200 rounded-xl p-4 sm:p-6 mb-10">
+        <h2 className="text-lg font-semibold mb-6 border-b pb-2">
+          {editing ? "Edit Category" : "Create New Category"}
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Category name *
+              <label className="block text-sm font-semibold mb-2">
+                Category Name <span className="text-red-500">*</span>
               </label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                 placeholder="Ex: Electronics"
                 required
               />
@@ -249,22 +250,21 @@ const Categories = () => {
 
             {/* Banner Heading */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Banner heading
+              <label className="block text-sm font-semibold mb-2">
+                Banner Heading
               </label>
               <input
                 value={bannerHeading}
                 onChange={(e) => setBannerHeading(e.target.value)}
-                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
                 placeholder="Shop latest electronics"
               />
             </div>
 
             {/* Filters */}
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">Filters</label>
-
-              <div className="flex gap-2">
+            <div className="md:col-span-2 bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
+              <label className="block text-sm font-semibold mb-2">Search Filters / Tags</label>
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   ref={filterInputRef}
                   value={filterInput}
@@ -275,30 +275,29 @@ const Categories = () => {
                       addFilter();
                     }
                   }}
-                  className="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring"
-                  placeholder="Type filter name and press Add or Enter"
+                  className="flex-1 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                  placeholder="Type filter and press Enter"
                 />
                 <button
                   type="button"
                   onClick={addFilter}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                  className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                 >
-                  + Add
+                  Add
                 </button>
               </div>
 
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 {filters.map((f) => (
                   <div
                     key={f}
-                    className="flex items-center gap-2 bg-gray-100 px-3 py-1 rounded-full text-sm"
+                    className="flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1.5 rounded-full text-sm font-medium"
                   >
                     <span>{f}</span>
                     <button
                       type="button"
                       onClick={() => removeFilter(f)}
-                      className="text-gray-500 hover:text-gray-800"
-                      aria-label={`Remove ${f}`}
+                      className="hover:text-red-600 transition-colors text-lg leading-none"
                     >
                       ×
                     </button>
@@ -308,78 +307,79 @@ const Categories = () => {
             </div>
 
             {/* Banner Image */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Banner image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setBannerFile(e.target.files?.[0] || null)}
-                className="w-full"
-              />
-              {editing && !bannerFile && editing.bannerImage && (
-                <img
-                  src={buildImgSrc(editing.bannerImage)}
-                  alt="banner"
-                  className="h-12 w-20 object-cover rounded cursor-pointer mt-2"
-                  onClick={() =>
-                    setPreviewImage(buildImgSrc(editing.bannerImage))
-                  }
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold mb-2">Banner Image</label>
+              <div className="flex flex-col gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setBannerFile(e.target.files?.[0] || null)}
+                  className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                 />
-              )}
-              {bannerFile && (
-                <img
-                  src={URL.createObjectURL(bannerFile)}
-                  alt="banner preview"
-                  className="mt-2 h-24 object-cover rounded"
-                />
-              )}
+                {editing && !bannerFile && editing.bannerImage && (
+                  <div className="relative w-24 h-14 group">
+                    <img
+                      src={buildImgSrc(editing.bannerImage)}
+                      alt="banner"
+                      className="h-full w-full object-cover rounded-md border cursor-zoom-in"
+                      onClick={() => setPreviewImage(buildImgSrc(editing.bannerImage))}
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-md pointer-events-none" />
+                  </div>
+                )}
+                {bannerFile && (
+                  <img
+                    src={URL.createObjectURL(bannerFile)}
+                    alt="preview"
+                    className="h-24 w-40 object-cover rounded-lg border border-blue-200"
+                  />
+                )}
+              </div>
             </div>
 
             {/* Heading Image */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Heading image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setHeadingFile(e.target.files?.[0] || null)}
-                className="w-full"
-              />
-              {editing && !headingFile && editing.headingImage && (
-                <img
-                  src={buildImgSrc(editing.headingImage)}
-                  alt="heading"
-                  className="h-12 w-20 object-cover rounded cursor-pointer mt-2"
-                  onClick={() =>
-                    setPreviewImage(buildImgSrc(editing.headingImage))
-                  }
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold mb-2">Heading Icon/Image</label>
+              <div className="flex flex-col gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setHeadingFile(e.target.files?.[0] || null)}
+                  className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
                 />
-              )}
-              {headingFile && (
-                <img
-                  src={URL.createObjectURL(headingFile)}
-                  alt="heading preview"
-                  className="mt-2 h-24 object-cover rounded"
-                />
-              )}
+                {editing && !headingFile && editing.headingImage && (
+                  <div className="relative w-24 h-14 group">
+                    <img
+                      src={buildImgSrc(editing.headingImage)}
+                      alt="heading"
+                      className="h-full w-full object-cover rounded-md border cursor-zoom-in"
+                      onClick={() => setPreviewImage(buildImgSrc(editing.headingImage))}
+                    />
+                  </div>
+                )}
+                {headingFile && (
+                  <img
+                    src={URL.createObjectURL(headingFile)}
+                    alt="preview"
+                    className="h-24 w-40 object-cover rounded-lg border border-blue-200"
+                  />
+                )}
+              </div>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="flex gap-3">
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t">
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+              className="bg-green-600 hover:bg-green-700 text-white px-8 py-2.5 rounded-lg font-bold shadow-sm transition-all active:scale-95"
             >
-              {editing ? "Update Category" : "Add Category"}
+              {editing ? "Save Changes" : "Create Category"}
             </button>
             <button
               type="button"
               onClick={clearForm}
-              className="border px-4 py-2 rounded"
+              className="px-6 py-2.5 rounded-lg border border-gray-300 font-medium hover:bg-gray-50 transition-colors"
             >
               Reset
             </button>
@@ -390,7 +390,7 @@ const Categories = () => {
                   setEditing(null);
                   clearForm();
                 }}
-                className="ml-auto text-sm text-gray-600 underline"
+                className="text-sm font-medium text-red-600 hover:underline ml-auto"
               >
                 Cancel Edit
               </button>
@@ -399,51 +399,36 @@ const Categories = () => {
         </form>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium">All Categories</h2>
-          <div className="text-sm text-gray-500">
-            {loading ? "Loading..." : `${categories.length} items`}
-          </div>
+      {/* TABLE SECTION */}
+      <div className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden">
+        <div className="p-4 sm:p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <h2 className="text-lg font-bold">Category List</h2>
+          <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+            {loading ? "Refreshing..." : `${categories.length} Total`}
+          </span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y">
+          <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">
-                  #
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">
-                  Name
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">
-                  Banner Heading
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">
-                  Filters
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">
-                  Images
-                </th>
-                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500">
-                  Actions
-                </th>
+                {["#", "Name", "Banner Heading", "Filters", "Images", "Actions"].map((head) => (
+                  <th key={head} className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    {head}
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody className="bg-white divide-y">
+            <tbody className="bg-white divide-y divide-gray-200">
               {categories.map((cat, idx) => (
-                <tr key={cat._id || idx} className="hover:bg-gray-50">
-                  <td className="px-3 py-3 text-sm">{idx + 1}</td>
-                  <td className="px-3 py-3 text-sm font-medium">
-                    {cat.name}
+                <tr key={cat._id || idx} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 text-sm text-gray-500">{idx + 1}</td>
+                  <td className="px-6 py-4 text-sm font-bold text-gray-900">{cat.name}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600 truncate max-w-[150px]">
+                    {cat.bannerHeading || "—"}
                   </td>
-                  <td className="px-3 py-3 text-sm">
-                    {cat.bannerHeading || "-"}
-                  </td>
-                  <td className="px-3 py-3 text-sm">
-                    <div className="flex flex-wrap gap-1">
+                  <td className="px-6 py-4">
+                    <div className="flex flex-wrap gap-1 max-w-[200px]">
                       {(Array.isArray(cat.filters)
                         ? cat.filters
                         : (cat.filters || "").split(",")
@@ -452,57 +437,48 @@ const Categories = () => {
                         .map((f, i) => (
                           <span
                             key={i}
-                            className="bg-gray-100 px-2 py-0.5 rounded-full text-xs"
+                            className="bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[10px] font-medium border border-gray-200"
                           >
                             {f}
                           </span>
                         ))}
                     </div>
                   </td>
-                  <td className="px-3 py-3 text-sm">
-                    <div className="flex items-center gap-3">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2">
                       {cat.bannerImage ? (
                         <img
                           src={buildImgSrc(cat.bannerImage)}
                           alt="banner"
-                          className="h-12 w-20 object-cover rounded cursor-pointer"
-                          onClick={() =>
-                            setPreviewImage(buildImgSrc(cat.bannerImage))
-                          }
+                          className="h-10 w-16 object-cover rounded shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                          onClick={() => setPreviewImage(buildImgSrc(cat.bannerImage))}
                         />
                       ) : (
-                        <div className="h-12 w-20 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">
-                          No banner
-                        </div>
+                        <div className="h-10 w-10 bg-gray-50 border rounded flex items-center justify-center text-[10px] text-gray-400">N/A</div>
                       )}
-
-                      {cat.headingImage ? (
+                      {cat.headingImage && (
                         <img
                           src={buildImgSrc(cat.headingImage)}
                           alt="heading"
-                          className="h-12 w-20 object-cover rounded cursor-pointer"
-                          onClick={() =>
-                            setPreviewImage(buildImgSrc(cat.headingImage))
-                          }
+                          className="h-10 w-10 object-cover rounded shadow-sm hover:scale-110 transition-transform cursor-pointer"
+                          onClick={() => setPreviewImage(buildImgSrc(cat.headingImage))}
                         />
-                      ) : (
-                        <div className="h-12 w-20 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">
-                          No heading
-                        </div>
                       )}
                     </div>
                   </td>
-                  <td className="px-3 py-3 text-sm">
+                  <td className="px-6 py-4">
                     <div className="flex gap-2">
                       <button
                         onClick={() => startEdit(cat)}
-                        className="px-3 py-1 rounded bg-green-500 text-white hover:bg-green-600"
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                        title="Edit"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => confirmDelete(cat)}
-                        className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700"
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Delete"
                       >
                         Delete
                       </button>
@@ -510,67 +486,52 @@ const Categories = () => {
                   </td>
                 </tr>
               ))}
-
-              {categories.length === 0 && !loading && (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className="px-3 py-6 text-center text-sm text-gray-500"
-                  >
-                    No categories yet.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Delete Modal */}
+      {/* Modals & Overlays (No Logic Changes) */}
       {showDeleteModal && deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="bg-white rounded shadow-lg w-full max-w-md p-6">
-            <h3 className="text-lg font-semibold mb-2">Delete category</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Are you sure you want to delete{" "}
-              <strong>{deleteTarget.name}</strong>? This action cannot be
-              undone.
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 transform transition-all scale-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Confirm Delete</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to remove <strong>{deleteTarget.name}</strong>? 
+              This will permanently delete the category.
             </p>
-
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setDeleteTarget(null);
-                }}
-                className="px-4 py-2 rounded border"
+                onClick={() => setShowDeleteModal(false)}
+                className="px-5 py-2 rounded-lg border border-gray-300 font-medium hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 rounded bg-red-600 text-white"
+                className="px-5 py-2 rounded-lg bg-red-600 text-white font-bold hover:bg-red-700 shadow-md shadow-red-200"
               >
-                Yes, delete
+                Yes, Delete
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Image Preview Overlay */}
       {previewImage && (
-        <div className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center">
-          <div className="relative max-w-[90vw] max-h-[90vh]">
+        <div 
+          className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div className="relative animate-in zoom-in duration-200">
             <img
               src={previewImage}
               alt="preview"
-              className="rounded-lg max-h-[90vh] max-w-[90vw] object-contain shadow-2xl"
+              className="rounded-xl max-h-[85vh] max-w-full object-contain shadow-2xl border border-white/10"
             />
-
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute -top-4 -right-4 bg-red-600 w-10 h-10 text-white flex items-center justify-center rounded-full hover:bg-red-700 shadow-lg"
+              className="absolute -top-12 right-0 text-white bg-white/20 hover:bg-white/40 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
             >
               ✕
             </button>

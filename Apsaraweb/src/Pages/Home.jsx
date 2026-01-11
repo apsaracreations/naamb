@@ -184,36 +184,65 @@ const Home = () => {
           </div>
         </div>
 
-        {/* REVISED MISSION SECTION */}
-        <div className="relative overflow-hidden">
-          <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 min-h-screen px-6 py-6 gap-10">
-            <div className="flex flex-col justify-center space-y-8 z-10">
-              <div className="space-y-4">
-                <p className="uppercase text-sm tracking-widest text-gray-500 font-medium">Our Mission</p>
-                <h2 className="text-4xl md:text-5xl font-serif text-[#310000] font-light leading-tight">
-                  Every purchase <br /> has a purpose
-                </h2>
-              </div>
-              <p className="text-lg text-gray-700 max-w-xl">
-                We have direct partnerships with over <strong>320 Indian artisans</strong> and over <strong>2000 indirectly</strong>. As a social enterprise that seeks to offer a <strong> fair-trade platform</strong>, our primary purpose is to support handicraft workers. With each purchase you make, you can help make a difference.
-              </p>
-            </div>
-            <div className="relative flex justify-center items-center">
-              <div className="hidden lg:block absolute inset-0 bg-[url('https://www.antiquesdealershop.com/wp-content/uploads/2024/06/IMG_5550-scaled.jpg')] bg-cover bg-center"></div>
-              <div className="absolute inset-0 bg-[#310000]/80"></div>
+{/* REVISED MISSION SECTION */}
+<div className="relative overflow-hidden bg-[#f9f8f6]">
+  <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 lg:min-h-screen px-6 py-12 md:py-24 gap-12 items-center">
+    
+    {/* Left Column: Text Content */}
+    <div className="flex flex-col justify-center space-y-8 z-10 order-2 lg:order-1">
+      <div className="space-y-4">
+        <p className="uppercase text-xs sm:text-sm tracking-[0.2em] text-gray-500 ">
+          Our Mission
+        </p>
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-serif text-[#310000] font-light leading-tight">
+          Every purchase <br className="hidden sm:block" /> has a purpose
+        </h2>
+      </div>
+      <p className="text-base md:text-lg text-gray-700 max-w-xl leading-relaxed">
+        We have direct partnerships with over <strong>320 Indian artisans</strong> and over 
+        <strong> 2000 indirectly</strong>. As a social enterprise that seeks to offer a 
+        <strong> fair-trade platform</strong>, our primary purpose is to support handicraft workers. 
+        With each purchase you make, you can help make a difference.
+      </p>
+    </div>
 
-              <div className="block lg:hidden">
-                <img src="https://img.freepik.com/premium-vector/floral-line-art_564198-4.jpg" alt="Decor" className="w-full h-64 object-cover rounded-xl" />
-              </div>
+    {/* Right Column: Visual Stats */}
+    <div className="relative flex justify-center items-center min-h-[400px] lg:min-h-[600px] order-1 lg:order-2 group">
+      {/* Background Image for Desktop */}
+      <div className="hidden lg:block absolute inset-0 overflow-hidden shadow-2xl">
+        <div className="absolute inset-0 bg-[url('https://www.antiquesdealershop.com/wp-content/uploads/2024/06/IMG_5550-scaled.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"></div>
+        <div className="absolute inset-0 bg-[#310000]/70 mix-blend-multiply"></div>
+      </div>
 
-              <div className="relative z-10 flex flex-col items-start lg:items-center bg-[#ededed]/70 p-8 rounded-xl lg:bg-transparent">
-                <h3 className="text-6xl md:text-7xl font-serif text-[#c8ccbd] font-medium leading-none">10+</h3>
-                <p className="uppercase text-lg tracking-widest text-gray-100 font-semibold mb-2">YEARS</p>
-                <p className="text-2xl font-serif text-[#c8ccbd] text-center">of Sourcing & Craftsmanship</p>
-              </div>
-            </div>
-          </div>
+      {/* Decorative Image for Mobile */}
+      <div className="block lg:hidden absolute inset-0  overflow-hidden">
+        <img 
+          src="https://img.freepik.com/premium-vector/floral-line-art_564198-4.jpg" 
+          alt="Decor" 
+          className="w-full h-full object-cover opacity-20" 
+        />
+        <div className="absolute inset-0 bg-[#310000] "></div>
+      </div>
+
+      {/* Stats Card */}
+      <div className="relative z-10 flex flex-col items-center text-center p-8 sm:p-12">
+        <div className="mb-2">
+          <span className="text-7xl md:text-8xl lg:text-9xl font-serif text-[#c8ccbd] font-medium leading-none">
+            10+
+          </span>
         </div>
+        <p className="uppercase text-sm md:text-lg tracking-[0.3em] text-white/90 font-semibold mb-4">
+          YEARS
+        </p>
+        <div className="h-px w-12 bg-[#c8ccbd] mb-4"></div>
+        <p className="text-xl md:text-2xl font-serif text-[#c8ccbd] italic">
+          of Sourcing & Craftsmanship
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
 
         {/* Other Sections */}
         <Categories />

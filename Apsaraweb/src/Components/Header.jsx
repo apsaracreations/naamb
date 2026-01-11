@@ -112,7 +112,7 @@ const Header = () => {
       <ToastContainer hideProgressBar autoClose={1500} theme="colored" />
 
       <header
-        className="sticky top-0 left-0 right-0 z-50 bg-[#310000] shadow-lg"
+        className="sticky top-0 left-0 right-0 z-50 bg-[#310000] shadow-lg "
         style={{ height: HEADER_HEIGHT }}
       >
         <div className="max-w-[1440px] mx-auto flex items-center h-full px-6 relative">
@@ -131,7 +131,7 @@ const Header = () => {
               <button
                 key={idx}
                 onClick={() => (action ? action() : handleNavigate(path))}
-                className="hover:text-[#E6B17E] transition-colors whitespace-nowrap text-[15px] uppercase tracking-wide"
+                className="hover:text-[#E6B17E] transition-colors whitespace-nowrap text-[13px] uppercase tracking-wide"
               >
                 {label}
               </button>

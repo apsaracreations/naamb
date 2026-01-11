@@ -5,7 +5,6 @@ import SimilarProducts from "../Components/SimilarProducts";
 import Login from "../Components/Login";
 import toast, { Toaster } from 'react-hot-toast';
 
-
 const API_URL = import.meta.env.VITE_API_URL;
 const API_ROOT = API_URL.replace(/\/api\/?$/, "");
 
@@ -31,6 +30,10 @@ const buildImgSrc = (path) => {
   return `${API_ROOT}/${p}`;
 };
 
+const formatCurrency = (amount) => {
+  return `₹ ${amount.toLocaleString("en-IN")}`;
+};
+
 const CustomStyles = `
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
@@ -38,6 +41,13 @@ const CustomStyles = `
   }
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #5C644B;
+    border-radius: 10px;
   }
 `;
 
@@ -51,14 +61,24 @@ const ProductDetails = () => {
   const [openSection, setOpenSection] = useState(null);
   const [notification, setNotification] = useState(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
+  // LIGHTBOX & HOVER
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [hoverPosition, setHoverPosition] = useState({ x: 50, y: 50 });
 
-
-  const [showLogin, setShowLogin] = useState(false);
-
+  // RECEIPT MODAL STATE (Add this logic where your payment success triggers)
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [shippingDetails, setShippingDetails] = useState({
+    fullName: "John Doe",
+    addressLine1: "123 Green Valley",
+    city: "Mumbai",
+    state: "Maharashtra",
+    zipCode: "400001",
+    phone: "+91 9876543210",
+    email: "john@example.com"
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -91,46 +111,40 @@ const ProductDetails = () => {
     });
   };
 
-const handleAddToCart = () => {
-  const userToken = localStorage.getItem("token");
-  const storedUser = localStorage.getItem("user");
+  const handleAddToCart = () => {
+    const userToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
 
-  if (!userToken || !storedUser) {
-    setShowLogin(true);
-    return;
-  }
+    if (!userToken || !storedUser) {
+      setShowLogin(true);
+      return;
+    }
 
-  // Parse the stored user JSON string
-  const user = JSON.parse(storedUser);
-  const userId = user.id || user._id; // support both formats
+    const user = JSON.parse(storedUser);
+    const userId = user.id || user._id;
 
-  fetch(`${API_URL}/cart/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${userToken}`,
-    },
-    body: JSON.stringify({
-      userId,
-      productId: product._id,
-      quantity,
-    }),
-  })
-    .then(async (res) => {
-      const data = await res.json().catch(() => null);
-      console.log("Backend response:", data);
-      
-      if (!res.ok) throw new Error(data?.message || "Something failed");
-
-      toast.success("🛒 Added to cart!");
-      return data;
+    fetch(`${API_URL}/cart/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userToken}`,
+      },
+      body: JSON.stringify({
+        userId,
+        productId: product._id,
+        quantity,
+      }),
     })
-    .catch((err) => {
-      toast.error(err.message || "Something went wrong");
-      console.error("Frontend error ->", err.message);
-    });
-};
-
+      .then(async (res) => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.message || "Something failed");
+        toast.success("🛒 Added to cart!");
+        return data;
+      })
+      .catch((err) => {
+        toast.error(err.message || "Something went wrong");
+      });
+  };
 
   const handleCloseLogin = () => setShowLogin(false);
 
@@ -157,14 +171,12 @@ const handleAddToCart = () => {
   }
 
   return (
-    <div className="bg-[#f9f8f6] min-h-screen font-sans">
+    <div className="bg-[#f9f8f6] min-h-screen font-serif">
       <style>{CustomStyles}</style>
-          <Toaster
-      containerStyle={{ zIndex: 99999 }}
-      toastOptions={{
-        style: { zIndex: 99999 }
-      }}
-    />
+      <Toaster
+        containerStyle={{ zIndex: 99999 }}
+        toastOptions={{ style: { zIndex: 99999 } }}
+      />
 
       {/* Notification */}
       {notification && (
@@ -177,38 +189,114 @@ const handleAddToCart = () => {
       )}
 
       {/* Login Prompt Modal */}
-{showLogin && (
-  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[999]">
-    <div className="relative bg-white rounded-xl p-6 shadow-lg w-[90%] max-w-md">
-      <button
-        className="absolute top-3 right-3 text-gray-600 hover:text-black"
-        onClick={() => setShowLogin(false)}
-      >
-        <X className="w-5 h-5" />
-      </button>
+      {showLogin && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[999] p-4">
+          <div className="relative bg-white rounded-xl p-6 shadow-lg w-full max-w-md">
+            <button
+              className="absolute top-3 right-3 text-gray-600 hover:text-black"
+              onClick={() => setShowLogin(false)}
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <Login onClose={handleCloseLogin} />
+          </div>
+        </div>
+      )}
 
-      <Login onClose={handleCloseLogin} />
+      {/* Responsive Receipt Modal */}
+      {showReceipt && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[1000] p-2 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative">
+            <button
+              onClick={() => setShowReceipt(false)}
+              className="absolute top-3 right-3 sm:top-5 sm:right-5 text-gray-400 hover:text-gray-800 text-2xl font-bold z-10 p-2"
+              aria-label="Close Modal"
+            >
+              &times;
+            </button>
 
-    </div>
-  </div>
-)}
+            <div className="p-4 sm:p-8 overflow-y-auto custom-scrollbar">
+              <div className="text-center mb-6 mt-4 sm:mt-0">
+                <h2 className="text-xl sm:text-2xl font-bold text-[#5C644B] mb-1">Payment Successful!</h2>
+                <p className="text-gray-600 text-xs sm:text-sm">Here is your order receipt</p>
+              </div>
 
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Shipping To:</h3>
+                <p className="text-gray-800 text-sm sm:text-base">{shippingDetails.fullName}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">
+                  {shippingDetails.addressLine1}, {shippingDetails.city}, {shippingDetails.state} - {shippingDetails.zipCode}
+                </p>
+                <p className="text-gray-600 text-xs sm:text-sm">Phone: {shippingDetails.phone}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Email: {shippingDetails.email}</p>
+              </div>
 
-      <div className="container mx-auto px-6 py-12 md:py-24 max-w-7xl">
+              <div className="overflow-x-auto mb-6 border rounded-lg">
+                <table className="w-full border-collapse min-w-[500px] sm:min-w-full">
+                  <thead>
+                    <tr className="bg-[#F3F4F6]">
+                      <th className="border-b p-3 text-left text-gray-700 text-xs sm:text-sm">Product</th>
+                      <th className="border-b p-3 text-center text-gray-700 text-xs sm:text-sm">Quantity</th>
+                      <th className="border-b p-3 text-right text-gray-700 text-xs sm:text-sm">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="hover:bg-gray-50 transition">
+                      <td className="border-b p-3 flex items-center gap-3">
+                        <img
+                          src={selectedImage?.url}
+                          className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border flex-shrink-0"
+                        />
+                        <span className="text-gray-800 font-medium text-xs sm:text-sm line-clamp-2">{product.name}</span>
+                      </td>
+                      <td className="border-b p-3 text-center text-gray-700 text-xs sm:text-sm">{quantity}</td>
+                      <td className="border-b p-3 text-right text-gray-800 font-semibold text-xs sm:text-sm">
+                        {formatCurrency(product.price * quantity)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colSpan="2" className="p-3 text-right font-bold text-gray-800 text-sm">Total Paid</td>
+                      <td className="p-3 text-right font-bold text-[#5C644B] text-sm sm:text-base">{totalPrice}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="text-center mb-6">
+                <p className="text-gray-800 font-semibold mb-2 text-sm sm:text-base">Thank you for choosing NAMb!</p>
+                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
+                  You will receive a tracking ID once your order is dispatched. Track your order anytime in the "Track Your Order" page.
+                </p>
+              </div>
+
+              <div className="flex justify-center pb-2">
+                <button
+                  onClick={() => setShowReceipt(false)}
+                  className="w-full sm:w-auto px-8 py-3 bg-[#5C644B] text-white font-semibold rounded-lg hover:bg-[#3A3F2D] transition shadow-md text-sm sm:text-base"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="container mx-auto px-4 sm:px-6 py-12 md:py-24 max-w-7xl">
         {/* Product Title on Mobile */}
         <div className="block md:hidden mb-8 text-center">
-          <p className="text-xl text-gray-500 mb-1">| AUTHENTIC CRAFT. CREATED IN INDIA.</p>
-          <h1 className="text-3xl font-serif text-[#310000] font-light mb-2">{product.name}</h1>
-          <p className="text-sm text-gray-600">Category: {product.categoryName}</p>
+          <p className="text-sm sm:text-xl text-gray-500 mb-1">| AUTHENTIC CRAFT. CREATED IN INDIA.</p>
+          <h1 className="text-2xl sm:text-3xl font-serif text-[#310000] font-light mb-2">{product.name}</h1>
+          <p className="text-xs sm:text-sm text-gray-600">Category: {product.categoryName}</p>
         </div>
 
-        {/* Main Grid: Images Left, Details Right */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-16 md:items-center">
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:gap-16 md:items-start">
           {/* Left: Image Gallery */}
           <div className="md:col-span-3 space-y-4">
             {selectedImage && (
               <div
-                className="relative aspect-square bg-gray-100 border border-[#e5dfd3] overflow-hidden shadow-md cursor-zoom-in"
+                className="relative aspect-square bg-gray-100 border border-[#e5dfd3] overflow-hidden shadow-md cursor-zoom-in rounded-lg"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onMouseMove={handleMouseMove}
@@ -220,15 +308,10 @@ const handleAddToCart = () => {
                     isHovering ? "scale-150" : "scale-100"
                   }`}
                   style={{ transformOrigin: `${hoverPosition.x}% ${hoverPosition.y}%` }}
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = "https://placehold.co/1000x1000/cccccc/333333?text=Image+Not+Found";
-                  }}
                 />
                 <button
                   onClick={() => setIsLightboxOpen(true)}
                   className="absolute top-3 right-3 z-10 p-2 bg-white/90 rounded-full shadow-md text-gray-700 hover:bg-white hover:scale-105 transition-all duration-200"
-                  aria-label="Zoom in"
                 >
                   <ZoomIn className="w-5 h-5" />
                 </button>
@@ -236,44 +319,27 @@ const handleAddToCart = () => {
             )}
 
             {/* Thumbnail Selector */}
-            <div className="flex space-x-3 justify-center  md:justify-start">
+            <div className="flex space-x-2 sm:space-x-3 justify-center md:justify-start overflow-x-auto pb-2">
               {product.images.map((image, idx) => (
                 <button
                   key={idx}
                   onClick={() =>
                     setSelectedImage({ url: buildImgSrc(image), alt: `${product.name} image ${idx + 1}` })
                   }
-                  className={`w-20 h-20 overflow-hidden cursor-pointer  rounded-md border-2 transition-all duration-300 ${
+                  className={`w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 overflow-hidden cursor-pointer rounded-md border-2 transition-all duration-300 ${
                     selectedImage?.url === buildImgSrc(image)
                       ? "border-[#3A3F2D] shadow-lg scale-105"
                       : "border-gray-300 opacity-75 hover:opacity-100 hover:border-gray-500"
                   }`}
                 >
-                  <img
-                    src={buildImgSrc(image)}
-                    alt={`${product.name} thumb ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "https://placehold.co/80x80/cccccc/333333?text=Thumb";
-                    }}
-                  />
+                  <img src={buildImgSrc(image)} className="w-full h-full object-cover" />
                 </button>
               ))}
-            </div>
-
-            {/* Product Category on Desktop */}
-            <div className="hidden md:block mt-4 text-gray-600">
-              <p>
-                <span className="font-semibold">Category: </span>
-                {product.categoryName}
-              </p>
             </div>
           </div>
 
           {/* Right: Details */}
           <div className="md:col-span-2 space-y-6">
-            {/* Product Name and SKU */}
             <div className="hidden md:block">
               <p className="uppercase text-sm tracking-widest text-gray-500 font-medium border-b border-gray-100 pb-1">
                 | AUTHENTIC CRAFT. CREATED IN INDIA.
@@ -281,20 +347,17 @@ const handleAddToCart = () => {
               <h1 className="text-4xl font-serif text-[#310000] font-light mt-2 mb-2">{product.name}</h1>
             </div>
 
-            {/* Description */}
-            <p className="text-lg text-gray-600 border-b border-gray-200 pb-6">{product.description}</p>
+            <p className="text-base sm:text-lg text-gray-600 border-b border-gray-200 pb-6">{product.description}</p>
 
-            {/* Points list */}
             <div className="space-y-3">
-              {product.points && product.points.length > 0 && product.points.map((point, index) => (
+              {product.points?.map((point, index) => (
                 <div key={index} className="flex items-start space-x-2">
                   <Check className="w-5 h-5 text-[#3A3F2D] shrink-0 mt-0.5" />
-                  <span className="text-gray-700 text-base">{point}</span>
+                  <span className="text-gray-700 text-sm sm:text-base">{point}</span>
                 </div>
               ))}
             </div>
 
-            {/* Quantity */}
             <div className="text-gray-700 font-semibold border-b border-gray-200 pb-6">
               Quantity in stock: {product.quantity}
             </div>
@@ -304,38 +367,36 @@ const handleAddToCart = () => {
               <span className="font-bold text-gray-900 text-xl">₹{product.price}</span>
             </div>
 
-            {/* Quantity selector and Add to Cart */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-0 border border-gray-300 rounded-lg overflow-hidden shrink-0">
+            {/* Controls */}
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shrink-0 w-full sm:w-auto justify-center">
                 <button
                   onClick={() => handleQuantityChange("decrement")}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 transition"
+                  className="p-3 bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
                   disabled={quantity <= 1}
-                  aria-label="Decrease quantity"
                 >
-                  <Minus className="w-4 h-4 text-gray-700" />
+                  <Minus className="w-4 h-4" />
                 </button>
-                <span className="px-3 py-2 text-center font-bold text-base text-[#310000] w-10">{quantity}</span>
+                <span className="px-4 py-2 font-bold text-[#310000] w-12 text-center">{quantity}</span>
                 <button
                   onClick={() => handleQuantityChange("increment")}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 transition"
-                  aria-label="Increase quantity"
+                  className="p-3 bg-gray-100 hover:bg-gray-200"
                 >
-                  <Plus className="w-4 h-4 text-gray-700" />
+                  <Plus className="w-4 h-4" />
                 </button>
               </div>
 
               <button
                 onClick={handleAddToCart}
-                className="flex-grow flex items-center justify-center cursor-pointer space-x-2 bg-[#310000] text-white py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wider shadow-lg hover:bg-[#4a0000] transition duration-300 active:scale-[0.99] md:text-base"
+                className="w-full flex items-center justify-center space-x-2 bg-[#310000] text-white py-4 px-6 rounded-lg font-bold text-sm uppercase tracking-wider shadow-lg hover:bg-[#4a0000] transition active:scale-[0.98]"
               >
                 <ShoppingCart className="w-5 h-5" />
-                <span className="text-base font-semibold whitespace-nowrap">ADD TO CART - {totalPrice}</span>
+                <span className="whitespace-nowrap">ADD TO CART - {totalPrice}</span>
               </button>
             </div>
 
-            {/* Quick Info Block */}
-            <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 space-y-2">
+            {/* Info Block */}
+            <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg text-xs sm:text-sm text-gray-700 space-y-2">
               <div className="flex items-center space-x-2">
                 <span className="text-[#3A3F2D] font-bold">✓</span>
                 <p>Free Shipping on orders above ₹ 5,000</p>
@@ -344,32 +405,24 @@ const handleAddToCart = () => {
                 <span className="text-[#3A3F2D] font-bold">✓</span>
                 <p>30-Day Easy Returns Policy</p>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-[#3A3F2D] font-bold">✓</span>
-                <p>Secure Payments powered by Stripe</p>
-              </div>
             </div>
           </div>
         </div>
 
-        {/* Product Information Section */}
+        {/* Product Info Accordion */}
         <div className="mt-16 border-t border-gray-300 pt-8 max-w-4xl mx-auto">
-          <h2 className="text-3xl font-serif text-[#310000] font-medium mb-6">Product Information</h2>
+          <h2 className="text-2xl sm:text-3xl font-serif text-[#310000] font-medium mb-6">Product Information</h2>
           <DetailSection
             title="Materials & Care"
             content={product.materialsCare || "N/A"}
             isOpen={openSection === "Materials & Care"}
-            onToggle={() =>
-              setOpenSection((prev) => (prev === "Materials & Care" ? null : "Materials & Care"))
-            }
+            onToggle={() => setOpenSection(prev => prev === "Materials & Care" ? null : "Materials & Care")}
           />
           <DetailSection
             title="Dimensions"
             content={product.dimensions || "N/A"}
             isOpen={openSection === "Dimensions"}
-            onToggle={() =>
-              setOpenSection((prev) => (prev === "Dimensions" ? null : "Dimensions"))
-            }
+            onToggle={() => setOpenSection(prev => prev === "Dimensions" ? null : "Dimensions")}
           />
         </div>
       </div>
