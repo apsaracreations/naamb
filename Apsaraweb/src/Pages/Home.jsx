@@ -83,31 +83,47 @@ const Home = () => {
             <div className="absolute inset-0 bg-[#310000]/90 "></div>
 
             {/* Content */}
-            <div className="relative z-10 space-y-6">
+<div className="relative z-10 space-y-6">
               {/* Logo + Name */}
-              <div className="flex items-center -space-x-6">
-                <div className="w-44 h-44 md:w-48 md:h-48">
-                  <img src={Logo} alt="Naamb Logo" className="w-full h-full object-cover drop-shadow-lg" />
-                </div>
-                <h1 className="text-4xl md:text-5xl font-serif tracking-[0.15em] uppercase text-white/90">Naamb</h1>
-              </div>
+<div className="flex justify-center items-center">
+  <div className="w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48">
+    <img
+      src={Logo}
+      alt="Naamb Logo"
+      className="w-full h-full object-contain drop-shadow-2xl"
+    />
+  </div>
+</div>
 
-              {/* Hero Heading */}
-              <h2 className="text-4xl md:text-5xl font-serif font-light leading-tight text-white drop-shadow-md">
-                Crafted with <span className="text-[#F5E6CA]">soul</span>,<br />
-                inspired by <span className="text-[#F5E6CA]">heritage</span>.
+
+              {/* Updated Hero Heading */}
+              <h2 className="text-3xl md:text-5xl  font-medium italic leading-tight text-white drop-shadow-md">
+                Together, Let’s Make <br />
+                <span className="text-[#F5E6CA] italic">Women Empowerment</span> <br />
+                a Living Reality
               </h2>
 
-              {/* Description */}
-              <p className="text-lg md:text-lg text-gray-200 leading-relaxed max-w-2xl font-light">
-                Experience the <span className="font-semibold text-[#F5E6CA]">art of India</span> through timeless handcrafted pieces.  
-                Every creation from <span className="font-medium">Naamb</span> is a story of tradition, dedication, and craftsmanship that bridges culture and elegance.
-              </p>
+              {/* Updated Description with the Story of Vishnu Priya */}
+              <div className="space-y-4 max-w-2xl">
+                <p className="text-lg md:text-xl text-[#F5E6CA] font-medium leading-relaxed italic">
+                  "In the quiet lanes of rural Kerala, there once lived a young girl named Vishnu Priya..."
+                </p>
+                <p className="text-base md:text-lg text-gray-200 leading-relaxed font-light">
+                  Her world was simple, but her dreams were vast. Inspired by the rich traditions of 
+                  Kerala’s arts and crafts, she longed to become an entrepreneur—someone who could 
+                  create, inspire, and uplift other women along with her.
+                </p>
+              </div>
 
               {/* CTA Button */}
-              <button onClick={() => handleNavigate('/about')} className="px-7 py-3 bg-[#F5E6CA] text-[#310000] text-base font-semibold rounded-full shadow-lg cursor-pointer hover:bg-[#e8d6a8] transition-all duration-300">
-                Explore Now
-              </button>
+              <div className="pt-2">
+                <button 
+                  onClick={() => handleNavigate('/about')} 
+                  className="px-8 py-3 bg-[#F5E6CA] text-[#310000] text-base font-semibold rounded-full shadow-lg cursor-pointer hover:bg-[#e8d6a8] hover:scale-105 transition-all duration-300"
+                >
+                  Explore Our Story
+                </button>
+              </div>
             </div>
           </div>
 
@@ -202,7 +218,7 @@ const Home = () => {
         We have direct partnerships with over <strong>320 Indian artisans</strong> and over 
         <strong> 2000 indirectly</strong>. As a social enterprise that seeks to offer a 
         <strong> fair-trade platform</strong>, our primary purpose is to support handicraft workers. 
-        With each purchase you make, you can help make a difference.
+        With each purchase you make, you can help to make a difference.
       </p>
     </div>
 
@@ -228,7 +244,7 @@ const Home = () => {
       <div className="relative z-10 flex flex-col items-center text-center p-8 sm:p-12">
         <div className="mb-2">
           <span className="text-7xl md:text-8xl lg:text-9xl font-serif text-[#c8ccbd] font-medium leading-none">
-            10+
+            15+
           </span>
         </div>
         <p className="uppercase text-sm md:text-lg tracking-[0.3em] text-white/90 font-semibold mb-4">
@@ -236,7 +252,7 @@ const Home = () => {
         </p>
         <div className="h-px w-12 bg-[#c8ccbd] mb-4"></div>
         <p className="text-xl md:text-2xl font-serif text-[#c8ccbd] italic">
-          of Sourcing & Craftsmanship
+          of Empowerment Journey
         </p>
       </div>
     </div>
@@ -265,20 +281,31 @@ const Home = () => {
               </button>
             </div>
             <div className="md:w-1/2 flex justify-center">
-              <div className="relative group">
-                <img
-                  src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
-                  alt="Our Story Video Thumbnail"
-                  className="w-[350px] md:w-[500px] rounded-lg shadow-2xl border-white/30 transition-transform duration-500 ease-in-out"
-                />
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener noreferrer" className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/80 text-[#3A3F2D] w-20 h-20 rounded-full flex items-center justify-center shadow-lg group-hover:bg-[#3A3F2D] group-hover:text-white transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 ml-1">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 3l14 9-14 9V3z" />
-                    </svg>
-                  </div>
-                </a>
-              </div>
+<div className="relative group w-full max-w-[350px] md:max-w-[600px] aspect-video rounded-lg overflow-hidden shadow-2xl border border-white/20 bg-black">
+  {/* The Thumbnail */}
+  <img 
+    src="https://img.youtube.com/vi/S_S1ABC2tM0/maxresdefault.jpg" 
+    alt="Video Thumbnail" 
+    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+  />
+  
+  {/* The Play Button Link */}
+  <a 
+    href="https://www.youtube.com/watch?v=S_S1ABC2tM0" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    className="absolute inset-0 flex flex-col items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all"
+  >
+    <div className="bg-white/90 text-[#310000] w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-10 h-10 ml-1">
+        <path d="M5 3l14 9-14 9V3z" />
+      </svg>
+    </div>
+    <p className="mt-4 text-white font-medium tracking-wide opacity-0 group-hover:opacity-100 transition-opacity">
+      Watch on YouTube
+    </p>
+  </a>
+</div>
             </div>
           </div>
         </div>

@@ -9,6 +9,8 @@ import {
   FaFemale,
   FaIndustry,
   FaHandshake,
+  FaRecycle,
+  FaPlusCircle
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -43,27 +45,32 @@ const About = () => {
 
   const approvals = [
     {
-      icon: <FaCertificate className="text-3xl  text-[#310000]/90" />,
-      title: "Khadi India (KVIC)",
-      text: "Approved Training Centre under Khadi and Village Industries Commission, Government of India.",
-    },
-    {
-      icon: <FaUniversity className="text-3xl  text-[#310000]/90" />,
+      icon: <FaUniversity className="text-3xl text-[#310000]/90" />,
       title: "Local Self Government Department (LSGD)",
       text: "Registered and approved under the Government of Kerala for certified training programs.",
     },
     {
-      icon: <FaFemale className="text-3xl  text-[#310000]/90" />,
+      icon: <FaCertificate className="text-3xl text-[#310000]/90" />,
+      title: "Khadi India (KVIC)",
+      text: "Approved Training Centre under Khadi and Village Industries Commission, Government of India.",
+    },
+    {
+      icon: <FaRecycle className="text-3xl text-[#310000]/90" />,
+      title: "Kerala Suchitwa Mission",
+      text: "Recognized agency for solid waste (non-biodegradable) management and recycling initiatives under LSGD.",
+    },
+    {
+      icon: <FaIndustry className="text-3xl text-[#310000]/90" />,
+      title: "MSME & District Industry Centre",
+      text: "Certified under Service and Manufacturing sectors — UDYAM-KL-10-0002138 & UDYAM-KL-10-0033882.",
+    },
+    {
+      icon: <FaFemale className="text-3xl text-[#310000]/90" />,
       title: "Women & Child Development Dept.",
       text: "Recognized for advancing women’s vocational skills and rural empowerment.",
     },
     {
-      icon: <FaIndustry className="text-3xl  text-[#310000]/90" />,
-      title: "MSME Certification",
-      text: "Certified under both Service and Manufacturing sectors — UDYAM-KL-10-0002138 & UDYAM-KL-10-0033882.",
-    },
-    {
-      icon: <FaHandshake className="text-3xl  text-[#310000]/90" />,
+      icon: <FaHandshake className="text-3xl text-[#310000]/90" />,
       title: "Skill Development Collaborations",
       text: "Partnered with multiple national and state-level organizations to expand skill training initiatives.",
     },
@@ -73,13 +80,13 @@ const About = () => {
     <div className="min-h-screen bg-[#f9f8f6] font-sans">
       {/* HERO SECTION */}
       <section
-        className="relative text-center py-24 px-6 bg-cover bg-center bg-no-repeat"
+        className="relative text-center py-60 px-6 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
-            "url('https://www.gujarattourism.com/content/dam/gujrattourism/images/other-images/handicraft/Warli-Painting-banner.jpg')",
+            "url('https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw9EjUL_FzweFhSs1uFcWA1yqwoHoKJhgqSnypUmIZsKpY3Y76uNW3SmjU6ZGipz6ojKWGBqBOCnXZdA_PnrlvFqNL8zU4H5lMQFoDxeUyhqBWHMDQieDbv7lt6k6GoFN7M2SSBMiAMW8tM=s1360-w1360-h1020-rw')",
         }}
       >
-        <div className="absolute inset-0 bg-[#310000]/80"></div>
+        <div className="absolute inset-0 bg-[#310000]/70"></div>
         <div className="relative z-10 max-w-4xl mx-auto text-white">
           <h1 className="text-5xl md:text-6xl font-serif font-light mb-6 border-b-2 border-[#f5e6ca]/40 inline-block pb-2">
             About Apsara Institute
@@ -91,94 +98,99 @@ const About = () => {
         </div>
       </section>
 
-      {/* STORY SECTION */}
-<section className="container mx-auto px-6 lg:px-20 py-24 grid grid-cols-1 lg:grid-cols-[35%_65%] gap-12 items-center">
-  {/* Left Side: Image */}
-  <div className="overflow-hidden shadow-xl h-[300px] lg:h-[560px] ">
-    <img
-      src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrzlSliZQi25JMEHnHu4thjX6oMM0pnfOJP1oTNgozgPPTKm9vC44RNvLkq-gcZZybqYdap0mBtJzlh7l99zldSPVWv8Za-M4FjRGUirTtpz9ngwCGUdEmp36qhL7KG5y3y0uat=s1360-w1360-h1020-rw"
-      alt="Apsara Institute Training Center"
-      className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
-    />
-  </div>
+      {/* NEW STORY SECTION: VISHNU PRIYA & NAAMP */}
+      <section className="container mx-auto px-6 lg:px-20 py-24">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-serif text-[#310000] mb-8 border-b-2 border-[#3A2D2D]/20 inline-block pb-2 leading-tight">
+            Together, Let’s Make Women Empowerment a Living Reality
+          </h2>
+          
+          <div className="space-y-6 text-gray-700 text-lg leading-relaxed ">
+            <p>
+              In the quiet lanes of rural Kerala, there once lived a young girl named Vishnu Priya. Her world was simple, but her dreams were vast. Inspired by the rich traditions of Kerala’s arts and crafts, she longed to become an entrepreneur, someone who could create, inspire, and uplift other women along with her. But life was not easy. Her family’s financial struggles weighed heavily on her, and many of her dreams seemed like distant stars, visible, yet forever out of reach.
+            </p>
+            <p className="not-italic">
+              Then came the turning point in her life. In <strong>2004</strong>, <strong>Kudumbashree</strong>, Kerala’s mission for women’s development, extended a helping hand. With their support, Vishnu Priya found both the courage and the platform to step into entrepreneurship, breathing life into her dream of working with arts and crafts. 
+            </p>
+            <p className="not-italic">
+              Yet, as she moved forward, she realized that countless other women and families around her were still caught in the same cycle of financial hardship. She knew she could not walk this journey alone. So, she began a mission: to bring women together, to instill confidence in them, and to help them build small businesses of their own. With just a sewing machine at home, each woman could earn at least <strong>₹8,000 a month</strong>.
+            </p>
+            <p className="not-italic font-medium text-[#310000] bg-[#f7efe1] p-6 border-l-4 border-[#310000]">
+              To make this vision a reality, she launched a brand called <strong>“Naamp”</strong>, meaning <strong>“She and I together.”</strong> Naamp is not just a product. It is a symbol of cooperation, resilience, and love that explains the story of women who chose courage over despair.
+            </p>
+            <p className="not-italic">
+              Our mission is to expand Naamp with the support of technology, improving both employment opportunities and the income of our sisters. And this is where you can make a difference. By choosing to buy Naamp products, you are not just purchasing a pouch, but you are empowering, supporting, and standing with women who are writing a new chapter in their lives.
+            </p>
+          </div>
+        </div>
+      </section>
 
-  {/* Right Side: Content */}
-  <div className="space-y-6">
-    <h2 className="text-4xl font-serif text-[#310000] mb-4 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
-      Our Journey of Skill & Empowerment
-    </h2>
-    <p className="text-gray-700 text-lg leading-relaxed">
-      Established in <strong>2006</strong>,{" "}
-      <strong>
-        Apsara Training Institute for Skill Development and Management
-      </strong>{" "}
-      began as a small initiative to uplift local communities through
-      skill-based education. Over time, it evolved into a recognized center
-      for traditional art forms and vocational training, shaping thousands
-      of lives across Kerala. Officially recognized by the{" "}
-      <strong>Khadi and Village Industries Commission (KVIC)</strong> and
-      affiliated with the{" "}
-      <strong>Local Self Government Department (LSGD)</strong> of Kerala,
-      Apsara stands as a symbol of trust and excellence in grassroots
-      education.
-    </p>
-
-    <p className="text-gray-700 text-lg leading-relaxed">
-      Our training includes a diverse range of disciplines such as{" "}
-      <strong>
-        handloom weaving, embroidery, tailoring, handicrafts, and
-        entrepreneurship development
-      </strong>
-      . Each course blends traditional craftsmanship with modern
-      techniques, ensuring our learners are industry-ready while
-      preserving cultural roots. Today, Apsara Institute continues to
-      redefine skill development — not just by teaching, but by inspiring
-      independence, confidence, and innovation.
-    </p>
-  </div>
-</section>
-
+      {/* STORY SECTION: JOURNEY */}
+      <section className="container mx-auto px-6 lg:px-20 pb-24 grid grid-cols-1 lg:grid-cols-[35%_65%] gap-12 items-center">
+        <div className="overflow-hidden shadow-xl h-[300px] lg:h-[560px] ">
+          <img
+            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzQCILKWwbgFO85dSg5eiqwYCDrqqYSBlQFvysG9yEOY7md8g65wWVg5PUm9G6_ypPCwp5WrhCORdmjCh7vdJpNAZ8YF-n-r1H00hFUkLWNyvSst5N93_VJNw9f4OMuERRi2B6t=s1360-w1360-h1020-rw"
+            alt="Apsara Institute Training Center"
+            className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+        <div className="space-y-6">
+          <h2 className="text-4xl font-serif text-[#310000] mb-4 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
+            Our Journey of Skill & Empowerment
+          </h2>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Established in <strong>2006</strong>,{" "}
+            <strong>
+              Apsara Training Institute for Skill Development and Management
+            </strong>{" "}
+            began as a small initiative to uplift local communities through
+            skill-based education. Over time, it evolved into a recognized center
+            for traditional art forms and vocational training, shaping thousands
+            of lives across Kerala. Officially recognized by the{" "}
+            <strong>Khadi and Village Industries Commission (KVIC)</strong> and
+            affiliated with the{" "}
+            <strong>Local Self Government Department (LSGD)</strong> of Kerala,
+            Apsara stands as a symbol of trust and excellence in grassroots
+            education.
+          </p>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Our training includes a diverse range of disciplines such as{" "}
+            <strong>
+              handloom weaving, embroidery, tailoring, handicrafts, and
+              entrepreneurship development
+            </strong>
+            . Each course blends traditional craftsmanship with modern
+            techniques, ensuring our learners are industry-ready while
+            preserving cultural roots. Today, Apsara Institute continues to
+            redefine skill development — not just by teaching, but by inspiring
+            independence, confidence, and innovation.
+          </p>
+        </div>
+      </section>
 
       {/* VISION & MISSION */}
       <section className="bg-[#f7efe1] py-20 px-6 lg:px-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
-          {/* Vision */}
           <div>
             <h3 className="text-3xl font-serif text-[#310000] mb-5 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
               Our Vision
             </h3>
-            <p className="text-gray-700 text-lg leading-relaxed mb-4">
-              To nurture a society where skill, creativity, and culture move hand
-              in hand — building a generation that values craftsmanship as much
-              as innovation. Apsara Institute envisions becoming a beacon of
-              empowerment that transforms traditional arts into sustainable
-              livelihoods, connecting India’s rich heritage with the modern
-              world.
-            </p>
             <p className="text-gray-700 text-lg leading-relaxed">
-              We aspire to create opportunities for every learner, especially
-              women and youth, to stand strong through knowledge, dignity, and
-              self-reliant success.
+              M/s Apsara Training Institute for Skill Development and Management focus on
+              empowerment of youth through Skill based Development for their self sustained
+              development and Capacity building through Vocational training by promoting
+              Micro Small and Medium Enterprises (MSME's) in rural and urban areas of the
+              country.
             </p>
           </div>
-
-          {/* Mission */}
           <div>
             <h3 className="text-3xl font-serif text-[#310000] mb-5 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
               Our Mission
             </h3>
-            <p className="text-gray-700 text-lg leading-relaxed mb-4">
-              To deliver accessible, inclusive, and high-quality skill
-              development programs that empower individuals to become creators,
-              innovators, and entrepreneurs. We are dedicated to preserving
-              heritage crafts, supporting artisans, and promoting eco-conscious
-              production methods.
-            </p>
             <p className="text-gray-700 text-lg leading-relaxed">
-              By blending traditional expertise with modern education and
-              technology, Apsara Institute continues to shape confident
-              individuals who uplift their communities and drive positive social
-              and economic change.
+              Our Mission is to reach out to the unreached/less privileged through a multifaceted
+              approach focusing on Skill Development training, capacity building and other
+              development initiatives/Income generation activities.
             </p>
           </div>
         </div>
@@ -225,6 +237,12 @@ const About = () => {
               </p>
             </div>
           ))}
+          {/* 16+ Certifications Card */}
+          <div className="bg-white border border-[#e5dfd3] p-6 rounded-xl shadow-md hover:shadow-lg transition text-center flex flex-col items-center justify-center border-dashed border-2">
+             <FaPlusCircle className="text-3xl text-[#310000]/60 mb-3" />
+             <h4 className="text-2xl font-bold text-[#310000]">16+ Certifications</h4>
+             <p className="text-gray-500 text-sm italic">from National & State-level departments</p>
+          </div>
         </div>
       </section>
 

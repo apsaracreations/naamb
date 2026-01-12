@@ -25,6 +25,10 @@ const Products = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const emptyForm = {
     id: null,
     name: "",
@@ -47,6 +51,7 @@ const Products = () => {
       const res = await fetch(`${API_BASE}/products/get`);
       const data = await res.json();
       setProducts(Array.isArray(data) ? data : []);
+      setCurrentPage(1); // Reset to first page on fetch
     } catch (err) {
       console.error(err);
       toast.error("Failed to load products");
@@ -70,6 +75,12 @@ const Products = () => {
     fetchProducts();
     fetchCategories();
   }, []);
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -312,7 +323,7 @@ const Products = () => {
       </div>
 
       {/* TABLE SECTION */}
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="bg-white shadow rounded-lg overflow-hidden mb-10">
         <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
           <h2 className="text-lg font-semibold text-gray-800">Inventory Overview</h2>
         </div>
@@ -337,7 +348,7 @@ const Products = () => {
                 </tr>
               )}
 
-              {products.map((p) => (
+              {currentItems.map((p) => (
                 <tr key={p._id} className="hover:bg-gray-50/80 transition-colors">
                   <td className="px-6 py-4 max-w-[250px]">
                     <div className="font-bold text-gray-800 truncate">{p.name}</div>
@@ -382,6 +393,31 @@ const Products = () => {
             </tbody>
           </table>
         </div>
+
+        {/* PAGINATION CONTROLS */}
+        {products.length > itemsPerPage && (
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+            <div className="text-xs font-bold text-gray-500 uppercase">
+              Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, products.length)} of {products.length}
+            </div>
+            <div className="flex gap-2">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => prev - 1)}
+                className="px-4 py-2 text-xs font-bold bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                PREVIOUS
+              </button>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => prev + 1)}
+                className="px-4 py-2 text-xs font-bold bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                NEXT
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* DELETE MODAL */}

@@ -151,12 +151,12 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <FaPhoneAlt className="text-[#310000] text-lg" />
-                  <p className="text-gray-700 font-medium">+91 1234 567 890</p>
+                  <p className="text-gray-700 font-medium">+91 9946186811</p>
                 </div>
 
                 <div className="flex items-center space-x-3">
                   <FaEnvelope className="text-[#310000] text-lg" />
-                  <p className="text-gray-700 font-medium">support@apsarainstitute.com</p>
+                  <p className="text-gray-700 font-medium">apsaracreations23@gmail.com</p>
                 </div>
 
                 <div className="flex items-start space-x-3">

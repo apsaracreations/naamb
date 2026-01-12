@@ -51,9 +51,9 @@ const policyTexts = {
               Discover the art of responsible luxury.
             </p>
             <div className="flex gap-4 text-xl">
-               <a href="https://instagram.com/namb" target="_blank" rel="noreferrer" className="hover:text-[#E6B17E] transition-all transform hover:-translate-y-1"><FaInstagram/></a>
-               <a href="https://wa.me/yournumber" target="_blank" rel="noreferrer" className="hover:text-[#E6B17E] transition-all transform hover:-translate-y-1"><FaWhatsapp/></a>
-               <a href="mailto:support@namb.com" className="hover:text-[#E6B17E] transition-all transform hover:-translate-y-1"><FaEnvelope/></a>
+               <a href="https://instagram.com/apsara_training_institute" target="_blank" rel="noreferrer" className="hover:text-[#E6B17E] transition-all transform hover:-translate-y-1"><FaInstagram/></a>
+               <a href="https://wa.me/919946186811" target="_blank" rel="noreferrer" className="hover:text-[#E6B17E] transition-all transform hover:-translate-y-1"><FaWhatsapp/></a>
+               <a href="mailto:apsaracreations23@gmail.com" className="hover:text-[#E6B17E] transition-all transform hover:-translate-y-1"><FaEnvelope/></a>
             </div>
           </div>
 
@@ -73,7 +73,7 @@ const policyTexts = {
             <h3 className="text-white font-bold mb-6 uppercase tracking-widest text-xs">Support</h3>
             <ul className="space-y-4 text-sm">
               <li><button onClick={() => navigate("/tracking")} className="hover:text-[#E6B17E] transition-colors">Track Your Order</button></li>
-              <li><button onClick={() => navigate("/login")} className="hover:text-[#E6B17E] transition-colors">My Account / Login</button></li>
+              {/* <li><button onClick={() => navigate("/login")} className="hover:text-[#E6B17E] transition-colors">My Account / Login</button></li> */}
               {["Shipping Policy", "Exchange Policy", "No COD Policy"].map((item) => (
                 <li key={item}>
                   <button onClick={() => openModal(item)} className="hover:text-[#E6B17E] transition-colors text-left">{item}</button>
@@ -101,7 +101,7 @@ const policyTexts = {
         {/* ---------- BOTTOM SECTION ---------- */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-[11px] uppercase tracking-[0.2em] opacity-50 order-2 md:order-1">
-            © {new Date().getFullYear()} Namb Studio. All rights reserved.
+            © {new Date().getFullYear()} Naamb. All rights reserved.
           </p>
 
           {/* DEVELOPER PILL */}
@@ -111,9 +111,9 @@ const policyTexts = {
             </span>
             <div className="h-4 w-[1px] bg-gray-600"></div>
             <div className="flex gap-5 items-center">
-              <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaLinkedin size={16}/></a>
-              <a href="https://wa.me/yournumber" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaWhatsapp size={16}/></a>
-              <a href="https://instagram.com/yourhandle" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaInstagram size={16}/></a>
+              <a href="https://www.linkedin.com/in/vishnudevk2003/" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaLinkedin size={16}/></a>
+              <a href="https://wa.me/919746653420" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaWhatsapp size={16}/></a>
+              <a href="https://instagram.com/heeyyiii_" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaInstagram size={16}/></a>
             </div>
           </div>
         </div>

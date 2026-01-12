@@ -135,7 +135,7 @@ const Cart = () => {
 
   const isCartEmpty = cartItems.length === 0;
 
-  const updateQuantity = (productId, newQty) => {
+const updateQuantity = (productId, newQty) => {
     if (newQty < 1) return;
     fetch(`${API_URL}/cart/update`, {
       method: "PUT",
@@ -153,6 +153,9 @@ const Cart = () => {
         setCartItems((prev) =>
           prev.map((item) => (item.productId === productId ? { ...item, quantity: newQty } : item))
         );
+        
+        // ✅ ADD THIS: Tell the Header to refresh the count
+        window.dispatchEvent(new Event("cartUpdated"));
       })
       .catch(console.error);
   };
@@ -170,9 +173,14 @@ const Cart = () => {
       })
       .then(() => {
         setCartItems((prev) => prev.filter((item) => item.productId !== productId));
+        
+        // ✅ ADD THIS: Tell the Header an item was removed
+        window.dispatchEvent(new Event("cartUpdated"));
       })
       .catch(console.error);
   };
+
+
 
   const handleNavigate = (path) => navigate(path);
 

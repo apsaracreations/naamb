@@ -24,7 +24,7 @@ const Header = () => {
         >
           <img src={logo} alt="NAMB Logo" className="w-10 h-10 rounded-full" />
           <h1 className="text-xl md:text-2xl font-bold tracking-wide text-[#E6B17E]">
-            NAMB Admin
+             Admin Panel
           </h1>
         </div>
 

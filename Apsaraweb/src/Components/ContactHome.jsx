@@ -33,8 +33,8 @@ const ContactHome = () => {
               </svg>
               <h4 className="text-xl font-serif text-[#310000] font-medium">Email Support</h4>
               <p className="text-gray-700 text-sm">Our team will get back to you within 24 hours.</p>
-              <a href="mailto:support@namb.com" className="font-semibold text-[#310000] hover:text-[#310000] transition">
-                support@namb.com
+              <a href="mailto:apsaracreations23@gmail.com" className="font-semibold text-[#310000] hover:text-[#310000] transition">
+                apsaracreations23@gmail.com
               </a>
             </div>
 
@@ -45,8 +45,8 @@ const ContactHome = () => {
               </svg>
               <h4 className="text-xl font-serif text-[#310000] font-medium">Call Us</h4>
               <p className="text-gray-700 text-sm">Monday - Friday, 10am - 6pm IST.</p>
-              <a href="tel:+919876543210" className="font-semibold text-[#310000] hover:text-[#310000] transition">
-                +91 987 654 3210
+              <a href="tel:+919946186811" className="font-semibold text-[#310000] hover:text-[#310000] transition">
+                +91 9946186811
               </a>
             </div>
 

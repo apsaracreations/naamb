@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaUser, FaLock, FaEnvelope, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// 1. Import the Google Login component
 import { GoogleLogin } from '@react-oauth/google';
 
 const Login = ({ onClose }) => {
@@ -49,6 +48,10 @@ const Login = ({ onClose }) => {
         } else {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
+
+          // ✅ ADD THIS HERE for regular login
+          window.dispatchEvent(new Event("userLogin"));
+
           setTimeout(() => onClose(), 1500);
         }
       } else {
@@ -60,7 +63,6 @@ const Login = ({ onClose }) => {
     }
   };
 
-  // 2. Handle Google Success
   const handleGoogleSuccess = async (credentialResponse) => {
     setLoading(true);
     try {
@@ -75,6 +77,10 @@ const Login = ({ onClose }) => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         toast.success("Google Login Successful!");
+
+        // ✅ ADD THIS HERE for google login
+        window.dispatchEvent(new Event("userLogin"));
+
         setTimeout(() => onClose(), 1500);
       } else {
         toast.error(data.message || "Google authentication failed");
@@ -135,7 +141,6 @@ const Login = ({ onClose }) => {
             </button>
           </form>
 
-          {/* 3. Divider and Google Button */}
           <div className="mt-6">
             <div className="relative flex items-center justify-center mb-4">
               <div className="border-t border-gray-300 w-full"></div>

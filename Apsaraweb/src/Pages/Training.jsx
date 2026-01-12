@@ -2,7 +2,10 @@ import React from 'react';
 import {
   FaGraduationCap,
   FaIndustry,
-  FaHandshake
+  FaHandshake,
+  FaLeaf,
+  FaRecycle,
+  FaGlobe
 } from 'react-icons/fa';
 import {
   MdCheckCircle,
@@ -55,37 +58,39 @@ const Training = () => {
 
   const trainingCategories = [
     {
-      title: 'Crafts & Vocational Skills',
+      title: 'Traditional Crafts & Arts',
       icon: <FaGraduationCap className="w-6 h-6 text-[#310000]" />,
       description:
-        'Hands-on training in traditional and modern craft techniques for product manufacturing.',
+        'Preserving heritage through technical mastery of natural fibers and traditional materials.',
       courses: [
-        'Fashion Designing Training',
-        'Embroidery Training',
-        'Crafts Training (Wood, Fibre, Metal, Terracotta)',
-        'Tailoring Coaching'
+        'Fashion & Embroidery Training',
+        'Bamboo & Jute Crafting',
+        'Terracotta & Pottery Arts',
+        'Traditional Musical Instruments'
       ]
     },
     {
-      title: 'Entrepreneurship & Manufacturing',
+      title: 'Sustainability & MSME',
+      icon: <FaRecycle className="w-6 h-6 text-[#310000]" />,
+      description:
+        'Promoting Micro, Small and Medium Enterprises through eco-friendly production methods.',
+      courses: [
+        'Wealth from Waste (Recycling)',
+        'Eco-friendly Pouch Making',
+        'Bio-degradable Product Design',
+        'Organic Food Processing'
+      ]
+    },
+    {
+      title: 'Enterprise Management',
       icon: <FaIndustry className="w-6 h-6 text-[#310000]" />,
       description:
-        'Training focused on establishing and scaling small businesses using sustainable practices.',
+        'Capacity building for sustainable livelihoods and successful business ownership.',
       courses: [
-        'Enterprise Development Training',
-        'Waste to Wealth Manufacturing',
-        'General Skills Training (220+ Skills)'
-      ]
-    },
-    {
-      title: 'Soft Skills & Leadership',
-      icon: <FaHandshake className="w-6 h-6 text-[#310000]" />,
-      description:
-        'Developing interpersonal and professional abilities for career growth and management.',
-      courses: [
-        'Communication & Personality Development',
-        'Effective Communication Skills',
-        'Leadership & Interview Training'
+        'Enterprise Development (EDP)',
+        'Vriksha Ayurveda Farming',
+        'Organic Waste to Manure',
+        'MSME Registration & Growth'
       ]
     }
   ];
@@ -93,21 +98,21 @@ const Training = () => {
   const benefits = [
     {
       icon: <MdSpeed className="w-6 h-6" />,
-      title: 'Machine Proficiency',
+      title: 'Skill-Based Empowerment',
       detail:
-        'Gain practical mastery in using advanced, high-speed machinery relevant to your trade.'
+        'Focus on technical proficiency and capacity building for self-sustained development.'
     },
     {
-      icon: <MdDesignServices className="w-6 h-6" />,
-      title: 'Design & Product Skills',
+      icon: <FaGlobe className="w-6 h-6" />,
+      title: 'Inclusive Outreach',
       detail:
-        'Learn material selection, product design, and arrangement techniques with professional guidance.'
+        'Reaching the unreached and less privileged through multifaceted development initiatives.'
     },
     {
       icon: <MdBusinessCenter className="w-6 h-6" />,
-      title: 'Business & Finance',
+      title: 'Income Generation',
       detail:
-        'Master marketing, valuation, auditing, and registration essentials to start your own venture.'
+        'Practical training designed specifically to facilitate immediate and steady income activities.'
     }
   ];
 
@@ -128,53 +133,78 @@ const Training = () => {
             Skill Development & Management
           </h1>
           <p className="text-lg md:text-xl text-white max-w-3xl mx-auto">
-            Empowering Futures Through Vocational & Entrepreneurial Training
+            Empowerment Through Skill-Based Development & Vocational Excellence
           </p>
         </div>
       </header>
 
-      {/* About Section */}
+      {/* Vision & Mission Section (Updated from Image) */}
+      {/* <section className="bg-[#f7efe1] py-16">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border-l-4 border-[#310000]">
+            <h3 className="text-2xl font-serif text-[#310000] mb-4 flex items-center">
+              Our Vision
+            </h3>
+            <p className="text-gray-700 leading-relaxed italic">
+              "To focus on empowerment of youth through Skill based Development for their self sustained development and Capacity building through Vocational training by promoting Micro Small and Medium Enterprises (MSME's) in rural and urban areas of the country."
+            </p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-sm border-l-4 border-[#310000]">
+            <h3 className="text-2xl font-serif text-[#310000] mb-4 flex items-center">
+              Our Mission
+            </h3>
+            <p className="text-gray-700 leading-relaxed italic">
+              "To reach out to the unreached /less privileged through a multifaceted approach focusing on Skill Development training, capacity building and other development initiatives /Income generation activities."
+            </p>
+          </div>
+        </div>
+      </section> */}
+
+      {/* Main Training Section */}
       <section className="max-w-6xl mx-auto px-6 py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-6">
           <h2 className="text-4xl font-serif text-[#310000] mb-4 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
-            About the Institute
+            Vocational Training Excellence
           </h2>
           <p className="text-gray-700 text-lg leading-relaxed">
-            The <strong>Apsara Training Institute</strong> is a socially driven
-            institution empowering women and youth through hands-on skill
-            development, vocational training, and entrepreneurship programs.
-            Since its inception, the institute has transformed countless lives
-            by bridging traditional craftsmanship with modern vocational
-            education. With government affiliations including KVIC and MSME
-            registration, Apsara stands for sustainability, creativity, and
-            empowerment.
+            Apsara Training Institute offers over <strong>210 specialized skill courses</strong>. 
+            Our approach blends traditional craftsmanship with modern industrial standards, 
+            ensuring that every trainee becomes a creator and an entrepreneur. We focus on 
+            <strong> "Wealth from Waste"</strong> and eco-friendly production to build 
+            sustainable livelihoods for over 50,000 youth and women across Kerala.
           </p>
+          <div className="flex gap-4">
+             <div className="text-center">
+                <span className="block text-3xl font-bold text-[#310000]">210+</span>
+                <span className="text-xs text-gray-500 uppercase tracking-wider">Courses</span>
+             </div>
+             <div className="w-px h-10 bg-gray-300"></div>
+             <div className="text-center">
+                <span className="block text-3xl font-bold text-[#310000]">50k+</span>
+                <span className="text-xs text-gray-500 uppercase tracking-wider">Trained</span>
+             </div>
+             <div className="w-px h-10 bg-gray-300"></div>
+             <div className="text-center">
+                <span className="block text-3xl font-bold text-[#310000]">100%</span>
+                <span className="text-xs text-gray-500 uppercase tracking-wider">Eco-Friendly</span>
+             </div>
+          </div>
         </div>
 
-        <div className="overflow-hidden shadow-lg">
+        <div className="overflow-hidden shadow-lg rounded-2xl">
           <img
-            src="https://lh3.googleusercontent.com/gps-cs-s/AC9h4nrzlSliZQi25JMEHnHu4thjX6oMM0pnfOJP1oTNgozgPPTKm9vC44RNvLkq-gcZZybqYdap0mBtJzlh7l99zldSPVWv8Za-M4FjRGUirTtpz9ngwCGUdEmp36qhL7KG5y3y0uat=s1360-w1360-h1020-rw"
+            src="https://nepalyouthfoundation.org/wp-content/uploads/2024/04/DSC05529-1-1-scaled.jpg"
             alt="Apsara Training Workshop"
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
           />
         </div>
       </section>
 
-      {/* Training Programs */}
+      {/* Programs Grid */}
       <section className="max-w-6xl mx-auto px-6 py-10">
-        <h2 className="text-4xl font-serif text-center text-[#310000] mb-10 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
-          Our Training Programs
+        <h2 className="text-4xl font-serif text-center text-[#310000] mb-12 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
+          Specialized Training Sectors
         </h2>
-
-        {/* Banner Image Above the Cards */}
-        <div className="mb-10 overflow-hidden shadow-md rounded-xl">
-          <img
-            src="https://nepalyouthfoundation.org/wp-content/uploads/2024/04/DSC05529-1-1-scaled.jpg"
-            alt="Training Program Overview"
-            className="w-full h-96 object-cover"
-          />
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {trainingCategories.map((category) => (
             <CategoryCard key={category.title} {...category} />
@@ -183,11 +213,11 @@ const Training = () => {
       </section>
 
       {/* Key Benefits */}
-      <section className="max-w-6xl mx-auto px-6 py-10">
-        <h2 className="text-4xl font-serif text-center text-[#310000] mb-10 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
-          Key Benefits
+      <section className="max-w-6xl mx-auto px-6 py-20">
+        <h2 className="text-4xl font-serif text-center text-[#310000] mb-12 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
+          Why Choose Apsara?
         </h2>
-        <div className="grid grid-cols-1  md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {benefits.map((benefit, index) => (
             <BenefitCard key={index} {...benefit} />
           ))}
@@ -195,18 +225,18 @@ const Training = () => {
       </section>
 
       {/* CTA */}
-      <section className="text-center py-20 bg-gradient-to-r from-[#310000]/95 to-[#310000]/95 text-white rounded-t-[2rem]">
+      <section className="text-center py-20 bg-[#310000] text-white rounded-t-[2rem]">
         <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 border-b-2 border-[#f5e6ca]/40 inline-block pb-2">
-          Ready to Begin Your Journey?
+          Start Your Enterprise Today
         </h2>
-        <p className="text-lg text-white/90 mb-8">
-          Transform your skills into a successful career or thriving enterprise.
+        <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+          Imparting craft skills and creating value from eco-friendly natural resources to rejuvenate dying crafts and generate steady income.
         </p>
         <button
           onClick={() => handleNavigate('/contact')}
-          className="px-10 py-3 bg-white text-[#310000] cursor-pointer rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-transform duration-300"
+          className="px-10 py-3 bg-[#f7efe1] text-[#310000] cursor-pointer rounded-full font-bold text-lg shadow-lg hover:bg-white transition-all duration-300"
         >
-          Contact Us
+          Enroll in a Program
         </button>
       </section>
     </div>

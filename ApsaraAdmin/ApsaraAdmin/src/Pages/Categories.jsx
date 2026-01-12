@@ -8,6 +8,10 @@ const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   // form state
   const [name, setName] = useState("");
   const [bannerHeading, setBannerHeading] = useState("");
@@ -32,6 +36,7 @@ const Categories = () => {
       if (!res.ok) throw new Error("Failed fetching categories");
       const data = await res.json();
       setCategories(data || []);
+      setCurrentPage(1); // Reset pagination on fetch
     } catch (err) {
       console.error(err);
       toast.error("Unable to fetch categories");
@@ -43,6 +48,12 @@ const Categories = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = categories.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(categories.length / itemsPerPage);
 
   // utility to build image src from returned path
   const buildImgSrc = (path) => {
@@ -420,9 +431,9 @@ const Categories = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {categories.map((cat, idx) => (
+              {currentItems.map((cat, idx) => (
                 <tr key={cat._id || idx} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-sm text-gray-500">{idx + 1}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{indexOfFirstItem + idx + 1}</td>
                   <td className="px-6 py-4 text-sm font-bold text-gray-900">{cat.name}</td>
                   <td className="px-6 py-4 text-sm text-gray-600 truncate max-w-[150px]">
                     {cat.bannerHeading || "—"}
@@ -489,9 +500,34 @@ const Categories = () => {
             </tbody>
           </table>
         </div>
+
+        {/* PAGINATION CONTROLS */}
+        {categories.length > itemsPerPage && (
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+            <div className="text-xs font-bold text-gray-500 uppercase">
+              Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, categories.length)} of {categories.length}
+            </div>
+            <div className="flex gap-2">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => prev - 1)}
+                className="px-4 py-2 text-xs font-bold bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                PREVIOUS
+              </button>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => prev + 1)}
+                className="px-4 py-2 text-xs font-bold bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              >
+                NEXT
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Modals & Overlays (No Logic Changes) */}
+      {/* Modals & Overlays */}
       {showDeleteModal && deleteTarget && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 transform transition-all scale-100">
