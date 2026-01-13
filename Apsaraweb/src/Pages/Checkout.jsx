@@ -43,38 +43,43 @@ const FormInput = ({ label, id, type = "text", value, onChange, required = true,
 );
 
 const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
-  const billRef = useRef(); // Create reference for the PDF content
+  // 1. Create the reference for the downloader
+  const billRef = useRef(null);
 
   if (!isOpen) return null;
 
-  // PDF Download Logic
+  // 2. The Download Logic
   const handleDownloadPDF = async () => {
     const element = billRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2, // Better quality
-      useCORS: true, // Needed to load images from your API URL
-      logging: false,
-      backgroundColor: "#ffffff", // Ensures white background in PDF
-    });
-    
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-      format: [canvas.width / 2, canvas.height / 2],
-    });
+    if (!element) return;
 
-    const width = pdf.internal.pageSize.getWidth();
-    const height = pdf.internal.pageSize.getHeight();
+    try {
+      const canvas = await html2canvas(element, {
+        scale: 2, 
+        useCORS: true, 
+        backgroundColor: "#ffffff",
+      });
 
-    pdf.addImage(imgData, "PNG", 0, 0, width, height);
-    pdf.save(`Receipt_${shippingDetails.fullName.replace(/\s+/g, "_")}.pdf`);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "px",
+        format: [canvas.width / 2, canvas.height / 2],
+      });
+
+      pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+      pdf.save(`Receipt_${shippingDetails.fullName}.pdf`);
+    } catch (err) {
+      console.error("Download failed", err);
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4">
+      {/* Container with max height and overflow handling */}
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative">
         
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 sm:top-5 sm:right-5 text-gray-400 hover:text-gray-800 text-2xl font-bold z-10 p-2"
@@ -83,7 +88,7 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
           &times;
         </button>
 
-        {/* --- Start of PDF Content Area (billRef) --- */}
+        {/* Scrollable Content Area - WE ADDED THE REF HERE */}
         <div ref={billRef} className="p-4 sm:p-8 overflow-y-auto custom-scrollbar bg-white">
           
           {/* Header */}
@@ -122,6 +127,7 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
                           src={prod.image.startsWith("http") ? prod.image : buildImgSrc(prod.image)}
                           alt={prod.title}
                           className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border flex-shrink-0"
+                          crossOrigin="anonymous" // IMPORTANT FOR DOWNLOAD TO WORK
                         />
                       ) : (
                         <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 flex items-center justify-center text-gray-400 rounded-lg font-light text-[8px] sm:text-[10px] flex-shrink-0">
@@ -146,23 +152,19 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
 
           {/* Footer Message */}
           <div className="text-center mb-6">
-            <p className="text-gray-800 font-semibold mb-2 text-sm sm:text-base">Thank you for choosing Naamb!</p>
+            <p className="text-gray-800 font-semibold mb-2 text-sm sm:text-base">Thank you for choosing NAMb!</p>
             <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
               You will receive a tracking ID once your order is dispatched. Track your order anytime in the "Track Your Order" page.
             </p>
           </div>
         </div>
-        {/* --- End of PDF Content Area --- */}
 
-        {/* Action Buttons (Excluded from PDF) */}
-        <div className="flex flex-col sm:flex-row gap-3 p-4 sm:px-8 pb-6 bg-white rounded-b-2xl">
+        {/* Action Buttons (New Download Button Added) */}
+        <div className="flex flex-col sm:flex-row gap-3 p-4 bg-gray-50 border-t rounded-b-2xl">
           <button
             onClick={handleDownloadPDF}
-            className="flex-1 px-8 py-3 bg-white border-2 border-[#5C644B] text-[#5C644B] font-bold rounded-lg hover:bg-gray-50 transition shadow-sm text-sm sm:text-base flex items-center justify-center gap-2"
+            className="flex-1 px-8 py-3 bg-white border-2 border-[#5C644B] text-[#5C644B] font-bold rounded-lg hover:bg-gray-100 transition shadow-sm text-sm sm:text-base flex items-center justify-center gap-2"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="Ref/4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
             Download Bill
           </button>
           <button
