@@ -52,13 +52,15 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
     if (!element) return;
 
     try {
-      // We use a try-catch specifically for the canvas capture
+      // We target the specific div and force a white background to avoid CSS issues
       const canvas = await html2canvas(element, {
-        scale: 2,
+        scale: 2, // Good quality without making the file huge
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: "#ffffff", // Force white background to avoid oklch issues
+        backgroundColor: "#ffffff", 
         logging: false,
+        onclone: (clonedDoc) => {
+          // Optional: You can modify the cloned element here if needed
+        }
       });
 
       const imgData = canvas.toDataURL("image/png");
@@ -69,23 +71,18 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
       });
 
       pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-      pdf.save(`Receipt_${shippingDetails.fullName || "Order"}.pdf`);
+      pdf.save(`Order_Receipt_${shippingDetails.fullName.replace(/\s+/g, '_')}.pdf`);
     } catch (error) {
-      console.error("PDF Download Error:", error);
-      alert("Note: PDF generated, but some modern styles or missing images might be simplified.");
+      console.error("PDF Generation failed:", error);
+      alert("There was an issue generating the PDF. This is usually caused by modern CSS colors. Please try again.");
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4">
-      {/* FIX 1: We add inline styles with HEX colors (#ffffff) 
-         to prevent html2canvas from seeing oklch colors.
-      */}
-      <div 
-        style={{ backgroundColor: '#ffffff' }} 
-        className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative"
-      >
+      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative">
         
+        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 sm:top-5 sm:right-5 text-gray-400 hover:text-gray-800 text-2xl font-bold z-10 p-2"
@@ -93,17 +90,26 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
           &times;
         </button>
 
-        <div ref={billRef} style={{ backgroundColor: '#ffffff' }} className="p-4 sm:p-8 overflow-y-auto custom-scrollbar">
-          
+        {/* BILL CONTENT AREA 
+            Note: We use style={{backgroundColor: '#ffffff'}} to override oklch 
+        */}
+        <div 
+          ref={billRef} 
+          style={{ backgroundColor: '#ffffff' }} 
+          className="p-4 sm:p-8 overflow-y-auto custom-scrollbar bg-white"
+        >
+          {/* Header */}
           <div className="text-center mb-6 mt-4 sm:mt-0">
-            {/* FIX 2: Using hex for text colors */}
-            <h2 style={{ color: '#5C644B' }} className="text-xl sm:text-2xl font-bold mb-1">Payment Successful!</h2>
+            <h2 style={{ color: '#5C644B' }} className="text-xl sm:text-2xl font-bold mb-1">
+              Payment Successful!
+            </h2>
             <p className="text-gray-600 text-xs sm:text-sm">Here is your order receipt</p>
           </div>
 
-          <div style={{ backgroundColor: '#f9fafb', borderColor: '#e5e7eb' }} className="mb-6 p-4 rounded-lg border">
+          {/* Shipping Details */}
+          <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb' }} className="mb-6 p-4 rounded-lg">
             <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Shipping To:</h3>
-            <p className="text-gray-800 text-sm sm:text-base">{shippingDetails.fullName}</p>
+            <p className="text-gray-800 text-sm sm:text-base font-medium">{shippingDetails.fullName}</p>
             <p className="text-gray-600 text-xs sm:text-sm">
               {shippingDetails.addressLine1}, {shippingDetails.city}, {shippingDetails.state} - {shippingDetails.zipCode}
             </p>
@@ -111,6 +117,7 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
             <p className="text-gray-600 text-xs sm:text-sm">Email: {shippingDetails.email}</p>
           </div>
 
+          {/* Products Table */}
           <div className="overflow-x-auto mb-6 border rounded-lg">
             <table className="w-full border-collapse min-w-[500px] sm:min-w-full">
               <thead>
@@ -130,51 +137,51 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
                           alt=""
                           className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border flex-shrink-0"
                           crossOrigin="anonymous"
-                          onError={(e) => { e.target.style.display = 'none'; }} // Hide if 404
+                          onError={(e) => { e.target.style.display = 'none'; }} // Don't crash on 404
                         />
                       ) : (
-                        <div className="w-10 h-10 bg-gray-200 rounded-lg" />
+                        <div className="w-10 h-10 bg-gray-200 rounded-lg flex-shrink-0" />
                       )}
-                      <span className="text-gray-800 font-medium text-xs sm:text-sm">{prod.title}</span>
+                      <span className="text-gray-800 font-medium text-xs sm:text-sm line-clamp-2">{prod.title}</span>
                     </td>
                     <td className="border-b p-3 text-center text-gray-700 text-xs sm:text-sm">{prod.quantity}</td>
                     <td className="border-b p-3 text-right text-gray-800 font-semibold text-xs sm:text-sm">
-                      {formatCurrency(prod.price * prod.quantity)}
+                      ₹{Number(prod.price * prod.quantity).toLocaleString("en-IN")}
                     </td>
                   </tr>
                 ))}
                 <tr>
                   <td colSpan="2" className="p-3 text-right font-bold text-gray-800 text-sm">Total Paid</td>
-                  {/* FIX 3: Hex color for total */}
                   <td style={{ color: '#5C644B' }} className="p-3 text-right font-bold text-sm sm:text-base">
-                    {formatCurrency(total)}
+                    ₹{Number(total).toLocaleString("en-IN")}
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
+          {/* Footer Message */}
           <div className="text-center mb-6">
-            <p className="text-gray-800 font-semibold mb-2 text-sm sm:text-base">Thank you for choosing NAMb!</p>
-            <p className="text-gray-500 text-xs sm:text-sm">
-              You will receive a tracking ID once your order is dispatched.
+            <p className="text-gray-800 font-semibold mb-2 text-sm sm:text-base">Thank you for choosing Naamb!</p>
+            <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
+              You will receive a tracking ID once your order is dispatched. Track your order anytime in the "Track Your Order" page.
             </p>
           </div>
         </div>
 
-        {/* Buttons (using HEX for safety) */}
-        <div style={{ backgroundColor: '#f9fafb', borderTop: '1px solid #e5e7eb' }} className="flex flex-col sm:flex-row gap-3 p-4 rounded-b-2xl">
+        {/* ACTION BUTTONS (Outside the Ref) */}
+        <div className="flex flex-col sm:flex-row gap-3 p-4 bg-gray-50 border-t rounded-b-2xl">
           <button
             onClick={handleDownloadPDF}
             style={{ borderColor: '#5C644B', color: '#5C644B' }}
-            className="flex-1 px-8 py-3 bg-white border-2 font-bold rounded-lg hover:bg-gray-100 transition text-sm sm:text-base flex items-center justify-center gap-2"
+            className="flex-1 px-8 py-3 bg-white border-2 font-bold rounded-lg hover:bg-gray-100 transition flex items-center justify-center gap-2"
           >
-            Download Bill
+            Download Bill (PDF)
           </button>
           <button
             onClick={onClose}
             style={{ backgroundColor: '#5C644B' }}
-            className="flex-1 px-8 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition shadow-md text-sm sm:text-base"
+            className="flex-1 px-8 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition shadow-md"
           >
             Close
           </button>
