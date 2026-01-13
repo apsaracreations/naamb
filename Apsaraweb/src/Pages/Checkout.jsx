@@ -43,40 +43,46 @@ const FormInput = ({ label, id, type = "text", value, onChange, required = true,
 );
 
 const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
-  // 1. Create the reference for the downloader
+  // Create a ref specifically for the receipt content
   const billRef = useRef(null);
 
   if (!isOpen) return null;
 
-  // 2. The Download Logic
   const handleDownloadPDF = async () => {
     const element = billRef.current;
     if (!element) return;
 
     try {
+      // Capture the modal content as a canvas
       const canvas = await html2canvas(element, {
-        scale: 2, 
-        useCORS: true, 
+        scale: 3, // Higher scale = sharper PDF text
+        useCORS: true, // Allows images from your API_URL to show up
         backgroundColor: "#ffffff",
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight,
       });
 
       const imgData = canvas.toDataURL("image/png");
+      
+      // Initialize PDF with same aspect ratio as the modal
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "px",
-        format: [canvas.width / 2, canvas.height / 2],
+        format: [canvas.width / 3, canvas.height / 3],
       });
 
-      pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
-      pdf.save(`Receipt_${shippingDetails.fullName}.pdf`);
-    } catch (err) {
-      console.error("Download failed", err);
+      const width = pdf.internal.pageSize.getWidth();
+      const height = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, "PNG", 0, 0, width, height);
+      pdf.save(`Receipt_${shippingDetails.fullName || "Order"}.pdf`);
+    } catch (error) {
+      console.error("PDF Download Error:", error);
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4">
-      {/* Container with max height and overflow handling */}
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative">
         
         {/* Close Button */}
@@ -88,7 +94,7 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
           &times;
         </button>
 
-        {/* Scrollable Content Area - WE ADDED THE REF HERE */}
+        {/* --- SCROLLABLE CONTENT AREA (This is what gets downloaded) --- */}
         <div ref={billRef} className="p-4 sm:p-8 overflow-y-auto custom-scrollbar bg-white">
           
           {/* Header */}
@@ -127,7 +133,7 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
                           src={prod.image.startsWith("http") ? prod.image : buildImgSrc(prod.image)}
                           alt={prod.title}
                           className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border flex-shrink-0"
-                          crossOrigin="anonymous" // IMPORTANT FOR DOWNLOAD TO WORK
+                          crossOrigin="anonymous" /* CRITICAL: Allows canvas to capture image */
                         />
                       ) : (
                         <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 flex items-center justify-center text-gray-400 rounded-lg font-light text-[8px] sm:text-[10px] flex-shrink-0">
@@ -158,13 +164,17 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
             </p>
           </div>
         </div>
+        {/* --- END OF REF AREA --- */}
 
-        {/* Action Buttons (New Download Button Added) */}
+        {/* Action Buttons (Not included in PDF) */}
         <div className="flex flex-col sm:flex-row gap-3 p-4 bg-gray-50 border-t rounded-b-2xl">
           <button
             onClick={handleDownloadPDF}
             className="flex-1 px-8 py-3 bg-white border-2 border-[#5C644B] text-[#5C644B] font-bold rounded-lg hover:bg-gray-100 transition shadow-sm text-sm sm:text-base flex items-center justify-center gap-2"
           >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
             Download Bill
           </button>
           <button
@@ -247,7 +257,7 @@ const Checkout = () => {
       key: paymentData.key,
       amount: paymentData.amount,
       currency: paymentData.currency,
-      name: "NAMb Store",
+      name: "Naamb Store",
       description: "Order Payment",
       order_id: paymentData.razorpayOrderId,
       handler: async function (response) {
