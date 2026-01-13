@@ -42,9 +42,9 @@ app.use("/api/payment", paymentRoutes);
 
 // 🧩 Define host and port manually
 const PORT = process.env.PORT || 5000;
-const HOST = "192.168.1.2";
+const HOST = "192.168.1.3";
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running at http://192.168.1.2:${PORT}`);
+  console.log(`Server running at http://192.168.1.3:${PORT}`);
 });
 

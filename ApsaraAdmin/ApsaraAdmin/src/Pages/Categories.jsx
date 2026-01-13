@@ -254,7 +254,7 @@ const Categories = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-                placeholder="Ex: Electronics"
+                placeholder="Ex: Bags"
                 required
               />
             </div>
@@ -268,7 +268,7 @@ const Categories = () => {
                 value={bannerHeading}
                 onChange={(e) => setBannerHeading(e.target.value)}
                 className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-                placeholder="Shop latest electronics"
+                placeholder="Shop latest Bags"
               />
             </div>
 
