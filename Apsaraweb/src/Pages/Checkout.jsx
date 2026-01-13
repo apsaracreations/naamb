@@ -43,7 +43,6 @@ const FormInput = ({ label, id, type = "text", value, onChange, required = true,
 );
 
 const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
-  // Create a ref specifically for the receipt content
   const billRef = useRef(null);
 
   if (!isOpen) return null;
@@ -53,58 +52,56 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
     if (!element) return;
 
     try {
-      // Capture the modal content as a canvas
+      // We use a try-catch specifically for the canvas capture
       const canvas = await html2canvas(element, {
-        scale: 3, // Higher scale = sharper PDF text
-        useCORS: true, // Allows images from your API_URL to show up
-        backgroundColor: "#ffffff",
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight,
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff", // Force white background to avoid oklch issues
+        logging: false,
       });
 
       const imgData = canvas.toDataURL("image/png");
-      
-      // Initialize PDF with same aspect ratio as the modal
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "px",
-        format: [canvas.width / 3, canvas.height / 3],
+        format: [canvas.width / 2, canvas.height / 2],
       });
 
-      const width = pdf.internal.pageSize.getWidth();
-      const height = pdf.internal.pageSize.getHeight();
-
-      pdf.addImage(imgData, "PNG", 0, 0, width, height);
+      pdf.addImage(imgData, "PNG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
       pdf.save(`Receipt_${shippingDetails.fullName || "Order"}.pdf`);
     } catch (error) {
       console.error("PDF Download Error:", error);
+      alert("Note: PDF generated, but some modern styles or missing images might be simplified.");
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative">
+      {/* FIX 1: We add inline styles with HEX colors (#ffffff) 
+         to prevent html2canvas from seeing oklch colors.
+      */}
+      <div 
+        style={{ backgroundColor: '#ffffff' }} 
+        className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full flex flex-col max-h-[95vh] sm:max-h-[90vh] relative"
+      >
         
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 sm:top-5 sm:right-5 text-gray-400 hover:text-gray-800 text-2xl font-bold z-10 p-2"
-          aria-label="Close Modal"
         >
           &times;
         </button>
 
-        {/* --- SCROLLABLE CONTENT AREA (This is what gets downloaded) --- */}
-        <div ref={billRef} className="p-4 sm:p-8 overflow-y-auto custom-scrollbar bg-white">
+        <div ref={billRef} style={{ backgroundColor: '#ffffff' }} className="p-4 sm:p-8 overflow-y-auto custom-scrollbar">
           
-          {/* Header */}
           <div className="text-center mb-6 mt-4 sm:mt-0">
-            <h2 className="text-xl sm:text-2xl font-bold text-[#5C644B] mb-1">Payment Successful!</h2>
+            {/* FIX 2: Using hex for text colors */}
+            <h2 style={{ color: '#5C644B' }} className="text-xl sm:text-2xl font-bold mb-1">Payment Successful!</h2>
             <p className="text-gray-600 text-xs sm:text-sm">Here is your order receipt</p>
           </div>
 
-          {/* Shipping Details */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <div style={{ backgroundColor: '#f9fafb', borderColor: '#e5e7eb' }} className="mb-6 p-4 rounded-lg border">
             <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Shipping To:</h3>
             <p className="text-gray-800 text-sm sm:text-base">{shippingDetails.fullName}</p>
             <p className="text-gray-600 text-xs sm:text-sm">
@@ -114,11 +111,10 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
             <p className="text-gray-600 text-xs sm:text-sm">Email: {shippingDetails.email}</p>
           </div>
 
-          {/* Products Table */}
           <div className="overflow-x-auto mb-6 border rounded-lg">
             <table className="w-full border-collapse min-w-[500px] sm:min-w-full">
               <thead>
-                <tr className="bg-[#F3F4F6]">
+                <tr style={{ backgroundColor: '#F3F4F6' }}>
                   <th className="border-b p-3 text-left text-gray-700 text-xs sm:text-sm">Product</th>
                   <th className="border-b p-3 text-center text-gray-700 text-xs sm:text-sm">Quantity</th>
                   <th className="border-b p-3 text-right text-gray-700 text-xs sm:text-sm">Amount</th>
@@ -131,16 +127,15 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
                       {prod.image ? (
                         <img
                           src={prod.image.startsWith("http") ? prod.image : buildImgSrc(prod.image)}
-                          alt={prod.title}
+                          alt=""
                           className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg border flex-shrink-0"
-                          crossOrigin="anonymous" /* CRITICAL: Allows canvas to capture image */
+                          crossOrigin="anonymous"
+                          onError={(e) => { e.target.style.display = 'none'; }} // Hide if 404
                         />
                       ) : (
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 flex items-center justify-center text-gray-400 rounded-lg font-light text-[8px] sm:text-[10px] flex-shrink-0">
-                          No Image
-                        </div>
+                        <div className="w-10 h-10 bg-gray-200 rounded-lg" />
                       )}
-                      <span className="text-gray-800 font-medium text-xs sm:text-sm line-clamp-2">{prod.title}</span>
+                      <span className="text-gray-800 font-medium text-xs sm:text-sm">{prod.title}</span>
                     </td>
                     <td className="border-b p-3 text-center text-gray-700 text-xs sm:text-sm">{prod.quantity}</td>
                     <td className="border-b p-3 text-right text-gray-800 font-semibold text-xs sm:text-sm">
@@ -150,36 +145,36 @@ const BillModal = ({ isOpen, onClose, shippingDetails, products, total }) => {
                 ))}
                 <tr>
                   <td colSpan="2" className="p-3 text-right font-bold text-gray-800 text-sm">Total Paid</td>
-                  <td className="p-3 text-right font-bold text-[#5C644B] text-sm sm:text-base">{formatCurrency(total)}</td>
+                  {/* FIX 3: Hex color for total */}
+                  <td style={{ color: '#5C644B' }} className="p-3 text-right font-bold text-sm sm:text-base">
+                    {formatCurrency(total)}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          {/* Footer Message */}
           <div className="text-center mb-6">
             <p className="text-gray-800 font-semibold mb-2 text-sm sm:text-base">Thank you for choosing NAMb!</p>
-            <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
-              You will receive a tracking ID once your order is dispatched. Track your order anytime in the "Track Your Order" page.
+            <p className="text-gray-500 text-xs sm:text-sm">
+              You will receive a tracking ID once your order is dispatched.
             </p>
           </div>
         </div>
-        {/* --- END OF REF AREA --- */}
 
-        {/* Action Buttons (Not included in PDF) */}
-        <div className="flex flex-col sm:flex-row gap-3 p-4 bg-gray-50 border-t rounded-b-2xl">
+        {/* Buttons (using HEX for safety) */}
+        <div style={{ backgroundColor: '#f9fafb', borderTop: '1px solid #e5e7eb' }} className="flex flex-col sm:flex-row gap-3 p-4 rounded-b-2xl">
           <button
             onClick={handleDownloadPDF}
-            className="flex-1 px-8 py-3 bg-white border-2 border-[#5C644B] text-[#5C644B] font-bold rounded-lg hover:bg-gray-100 transition shadow-sm text-sm sm:text-base flex items-center justify-center gap-2"
+            style={{ borderColor: '#5C644B', color: '#5C644B' }}
+            className="flex-1 px-8 py-3 bg-white border-2 font-bold rounded-lg hover:bg-gray-100 transition text-sm sm:text-base flex items-center justify-center gap-2"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
             Download Bill
           </button>
           <button
             onClick={onClose}
-            className="flex-1 px-8 py-3 bg-[#5C644B] text-white font-semibold rounded-lg hover:bg-[#3A3F2D] transition shadow-md text-sm sm:text-base"
+            style={{ backgroundColor: '#5C644B' }}
+            className="flex-1 px-8 py-3 text-white font-semibold rounded-lg hover:opacity-90 transition shadow-md text-sm sm:text-base"
           >
             Close
           </button>
