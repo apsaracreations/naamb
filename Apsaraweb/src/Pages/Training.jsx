@@ -14,6 +14,8 @@ import {
   MdBusinessCenter
 } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import TrainingBanner from "../assets/TrainingBanner.jpg"  
+import Training2 from "../assets/Training2.jpg"
 
 // Category Card
 const CategoryCard = ({ title, icon, description, courses }) => (
@@ -121,11 +123,11 @@ const Training = () => {
       {/* Header */}
       <header
         className="relative text-center py-24 md:py-40 overflow-hidden"
-        style={{
-          backgroundImage: `url('https://www.tallengestore.com/cdn/shop/products/minia_8_1c32153b-8579-4908-83fb-025740c6345f.jpg?v=1569137585')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
+  style={{
+    backgroundImage: `url(${TrainingBanner})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
       >
         <div className="absolute inset-0 bg-[#310000]/90"></div>
         <div className="relative z-10 text-white px-6">
@@ -191,13 +193,13 @@ const Training = () => {
           </div>
         </div>
 
-        <div className="overflow-hidden shadow-lg rounded-2xl">
-          <img
-            src="https://nepalyouthfoundation.org/wp-content/uploads/2024/04/DSC05529-1-1-scaled.jpg"
-            alt="Apsara Training Workshop"
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-          />
-        </div>
+<div className="overflow-hidden shadow-lg rounded-2xl">
+  <img
+    src={Training2}
+    alt="Apsara Training Workshop"
+    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+  />
+</div>
       </section>
 
       {/* Programs Grid */}

@@ -10,9 +10,11 @@ import {
   FaIndustry,
   FaHandshake,
   FaRecycle,
-  FaPlusCircle
+  FaCheckCircle,
+  FaAward,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import AboutBanner from "../assets/AboutBanner.jpg"
 
 const About = () => {
   const navigate = useNavigate();
@@ -27,17 +29,17 @@ const About = () => {
       text: "We believe skill development is the most powerful form of empowerment. Our programs help individuals turn their creativity into sustainable livelihoods.",
     },
     {
-      icon: <FaPalette className="text-4xl  text-[#310000]/90" />,
+      icon: <FaPalette className="text-4xl text-[#310000]/90" />,
       title: "Preserving Tradition",
       text: "From handloom weaving to embroidery, we honor India’s timeless crafts while merging them with modern design and training practices.",
     },
     {
-      icon: <FaLeaf className="text-4xl  text-[#310000]/90" />,
+      icon: <FaLeaf className="text-4xl text-[#310000]/90" />,
       title: "Sustainable Livelihoods",
       text: "Apsara promotes eco-friendly production, women entrepreneurship, and community-based job creation through responsible initiatives.",
     },
     {
-      icon: <FaHandsHelping className="text-4xl  text-[#310000]/90" />,
+      icon: <FaHandsHelping className="text-4xl text-[#310000]/90" />,
       title: "Community & Growth",
       text: "We work closely with artisans, women, and youth—ensuring equal opportunity, fair training, and a culture of mutual growth.",
     },
@@ -62,7 +64,7 @@ const About = () => {
     {
       icon: <FaIndustry className="text-3xl text-[#310000]/90" />,
       title: "MSME & District Industry Centre",
-      text: "Certified under Service and Manufacturing sectors — UDYAM-KL-10-0002138 & UDYAM-KL-10-0033882.",
+      text: "Certified under both Service and Manufacturing sectors — UDYAM-KL-10-0002138 & UDYAM-KL-10-0033882.",
     },
     {
       icon: <FaFemale className="text-3xl text-[#310000]/90" />,
@@ -74,101 +76,107 @@ const About = () => {
       title: "Skill Development Collaborations",
       text: "Partnered with multiple national and state-level organizations to expand skill training initiatives.",
     },
+    {
+      icon: <FaAward className="text-3xl text-[#310000]/90" />,
+      title: "16+ Certifications",
+      text: "Recognized by various National & State-level departments for excellence in social entrepreneurship.",
+    },
+  ];
+
+  const subBrands = [
+    { title: "Apsara Creations", desc: "TMEGP unit under KBIB focusing on traditional production." },
+    { title: "Apsara Training Institute", desc: "Our MSME certified skill development wing." },
+    { title: "Apsara Skill Park", desc: "Advanced industrial training and skill incubation." },
+    { title: "Naamb Project", desc: "Sustainable waste-to-wealth initiative empowering women." },
+  ];
+
+  const experienceItems = [
+    "Experience Center",
+    "Training Demo Space",
+    "Product Display Lab",
+    "Live Working Demo",
+    "Training Enquiry Desk",
   ];
 
   return (
     <div className="min-h-screen bg-[#f9f8f6] font-sans">
       {/* HERO SECTION */}
       <section
-        className="relative text-center py-60 px-6 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url('https://lh3.googleusercontent.com/gps-cs-s/AG0ilSw9EjUL_FzweFhSs1uFcWA1yqwoHoKJhgqSnypUmIZsKpY3Y76uNW3SmjU6ZGipz6ojKWGBqBOCnXZdA_PnrlvFqNL8zU4H5lMQFoDxeUyhqBWHMDQieDbv7lt6k6GoFN7M2SSBMiAMW8tM=s1360-w1360-h1020-rw')",
-        }}
+        className="relative text-center py-24 px-6 bg-cover bg-center bg-no-repeat"
+  style={{
+    backgroundImage: `url(${AboutBanner})`,
+  }}
       >
-        <div className="absolute inset-0 bg-[#310000]/70"></div>
-        <div className="relative z-10 max-w-4xl mx-auto text-white">
-          <h1 className="text-5xl md:text-6xl font-serif font-light mb-6 border-b-2 border-[#f5e6ca]/40 inline-block pb-2">
-            About Apsara Institute
+        <div className="absolute inset-0 bg-[#310000]/80"></div>
+        <div className="relative z-10 max-w-5xl mx-auto text-white">
+          <h1 className="text-5xl md:text-6xl font-serif font-light mb-4 border-b-2 border-[#f5e6ca]/40 inline-block pb-2">
+            Apsara Eco Hub
           </h1>
-          <p className="text-lg md:text-xl text-gray-100 leading-relaxed">
-            Empowering individuals since 2006 through skill, creativity, and
-            community — nurturing the spirit of self-reliance across Kerala.
+          <p className="text-2xl font-semibold italic text-[#f5e6ca] mb-6">"i+aval" — Co-creation. Collective Empowerment.</p>
+          <p className="text-lg md:text-xl font-semibold text-gray-100 leading-relaxed">
+            Headquartered in Ottapalam, we are a community-based livelihood movement 
+            shaping futures since 2003.
           </p>
         </div>
       </section>
 
-      {/* NEW STORY SECTION: VISHNU PRIYA & NAAMP */}
-      <section className="container mx-auto px-6 lg:px-20 py-24">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif text-[#310000] mb-8 border-b-2 border-[#3A2D2D]/20 inline-block pb-2 leading-tight">
+      {/* STORY SECTION */}
+      <section className="container mx-auto px-6 lg:px-20 py-24 grid grid-cols-1 lg:grid-cols-[35%_65%] gap-12 items-center">
+        <div className="overflow-hidden shadow-xl h-[300px] lg:h-[650px]">
+          <img
+            src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&q=80&w=800"
+            alt="Vishnu Priya - Social Enterprise Leader"
+            className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-4xl font-serif text-[#310000] mb-4 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
             Together, Let’s Make Women Empowerment a Living Reality
           </h2>
-          
-          <div className="space-y-6 text-gray-700 text-lg leading-relaxed ">
-            <p>
-              In the quiet lanes of rural Kerala, there once lived a young girl named Vishnu Priya. Her world was simple, but her dreams were vast. Inspired by the rich traditions of Kerala’s arts and crafts, she longed to become an entrepreneur, someone who could create, inspire, and uplift other women along with her. But life was not easy. Her family’s financial struggles weighed heavily on her, and many of her dreams seemed like distant stars, visible, yet forever out of reach.
-            </p>
-            <p className="not-italic">
-              Then came the turning point in her life. In <strong>2004</strong>, <strong>Kudumbashree</strong>, Kerala’s mission for women’s development, extended a helping hand. With their support, Vishnu Priya found both the courage and the platform to step into entrepreneurship, breathing life into her dream of working with arts and crafts. 
-            </p>
-            <p className="not-italic">
-              Yet, as she moved forward, she realized that countless other women and families around her were still caught in the same cycle of financial hardship. She knew she could not walk this journey alone. So, she began a mission: to bring women together, to instill confidence in them, and to help them build small businesses of their own. With just a sewing machine at home, each woman could earn at least <strong>₹8,000 a month</strong>.
-            </p>
-            <p className="not-italic font-medium text-[#310000] bg-[#f7efe1] p-6 border-l-4 border-[#310000]">
-              To make this vision a reality, she launched a brand called <strong>“Naamp”</strong>, meaning <strong>“She and I together.”</strong> Naamp is not just a product. It is a symbol of cooperation, resilience, and love that explains the story of women who chose courage over despair.
-            </p>
-            <p className="not-italic">
-              Our mission is to expand Naamp with the support of technology, improving both employment opportunities and the income of our sisters. And this is where you can make a difference. By choosing to buy Naamp products, you are not just purchasing a pouch, but you are empowering, supporting, and standing with women who are writing a new chapter in their lives.
-            </p>
+          <p className="text-gray-700 text-lg leading-relaxed">
+            In the quiet lanes of rural Kerala, there once lived a young girl named <strong>Vishnu Priya</strong>. 
+            Inspired by the rich traditions of Kerala’s arts and crafts, she longed to become an entrepreneur who could 
+            uplift other women. Despite financial struggles, the turning point came in <strong>2004</strong> when 
+            <strong> Kudumbashree</strong>, Kerala’s mission for women’s development, extended a helping hand.
+          </p>
+
+          <p className="text-gray-700 text-lg leading-relaxed">
+            Realizing she could not walk this journey alone, she began a mission to help women build small businesses 
+            of their own. With just a sewing machine at home, each woman could earn a dignified livelihood. To scale 
+            this vision, she launched <strong>“Naamb”</strong>, meaning <strong>“She and I together.”</strong>
+          </p>
+
+          <p className="text-gray-700 text-lg leading-relaxed">
+            <strong>Naamb</strong> is more than a product; it is a symbol of resilience and love, telling the story 
+            of women who chose courage over despair. By choosing <strong>Naamb</strong>, you are standing with women 
+            who are writing a new chapter in their lives.
+          </p>
+
+          <div className="bg-[#310000] text-[#f5e6ca] p-6 rounded-sm italic shadow-lg">
+            "Our mission is to expand Naamb with the support of technology, improving both employment 
+            opportunities and the income of our sisters." 
+            <span className="block mt-2 font-bold not-italic text-white">— Vishnu Priya</span>
           </div>
         </div>
       </section>
 
-      {/* STORY SECTION: JOURNEY */}
-      <section className="container mx-auto px-6 lg:px-20 pb-24 grid grid-cols-1 lg:grid-cols-[35%_65%] gap-12 items-center">
-        <div className="overflow-hidden shadow-xl h-[300px] lg:h-[560px] ">
-          <img
-            src="https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzQCILKWwbgFO85dSg5eiqwYCDrqqYSBlQFvysG9yEOY7md8g65wWVg5PUm9G6_ypPCwp5WrhCORdmjCh7vdJpNAZ8YF-n-r1H00hFUkLWNyvSst5N93_VJNw9f4OMuERRi2B6t=s1360-w1360-h1020-rw"
-            alt="Apsara Institute Training Center"
-            className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
-          />
-        </div>
-        <div className="space-y-6">
-          <h2 className="text-4xl font-serif text-[#310000] mb-4 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
-            Our Journey of Skill & Empowerment
-          </h2>
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Established in <strong>2006</strong>,{" "}
-            <strong>
-              Apsara Training Institute for Skill Development and Management
-            </strong>{" "}
-            began as a small initiative to uplift local communities through
-            skill-based education. Over time, it evolved into a recognized center
-            for traditional art forms and vocational training, shaping thousands
-            of lives across Kerala. Officially recognized by the{" "}
-            <strong>Khadi and Village Industries Commission (KVIC)</strong> and
-            affiliated with the{" "}
-            <strong>Local Self Government Department (LSGD)</strong> of Kerala,
-            Apsara stands as a symbol of trust and excellence in grassroots
-            education.
-          </p>
-          <p className="text-gray-700 text-lg leading-relaxed">
-            Our training includes a diverse range of disciplines such as{" "}
-            <strong>
-              handloom weaving, embroidery, tailoring, handicrafts, and
-              entrepreneurship development
-            </strong>
-            . Each course blends traditional craftsmanship with modern
-            techniques, ensuring our learners are industry-ready while
-            preserving cultural roots. Today, Apsara Institute continues to
-            redefine skill development — not just by teaching, but by inspiring
-            independence, confidence, and innovation.
-          </p>
+      {/* BRAND ECOSYSTEM SECTION */}
+      <section className="bg-[#f2ede4] py-20 px-6 lg:px-20 border-y border-[#e5dfd3]">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-serif text-[#310000] text-center mb-12">The Apsara Ecosystem</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {subBrands.map((brand, i) => (
+              <div key={i} className="bg-white p-6 border-l-4 border-[#310000] shadow-sm">
+                <h4 className="font-bold text-[#310000] mb-2">{brand.title}</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">{brand.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* VISION & MISSION */}
+      {/* VISION & MISSION SECTION */}
       <section className="bg-[#f7efe1] py-20 px-6 lg:px-20">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
           <div>
@@ -176,27 +184,27 @@ const About = () => {
               Our Vision
             </h3>
             <p className="text-gray-700 text-lg leading-relaxed">
-              M/s Apsara Training Institute for Skill Development and Management focus on
-              empowerment of youth through Skill based Development for their self sustained
-              development and Capacity building through Vocational training by promoting
-              Micro Small and Medium Enterprises (MSME's) in rural and urban areas of the
-              country.
+              M/s Apsara Training Institute for Skill Development and Management focuses on the transition from a 
+              <strong> small production unit to a community-based livelihood movement</strong>. We focus on 
+              empowerment of youth through Skill-based Development for their self-sustained development and 
+              Capacity building through Vocational training by promoting Micro Small and Medium Enterprises 
+              (MSMEs) in rural and urban areas of the country.
             </p>
           </div>
+
           <div>
             <h3 className="text-3xl font-serif text-[#310000] mb-5 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
               Our Mission
             </h3>
             <p className="text-gray-700 text-lg leading-relaxed">
-              Our Mission is to reach out to the unreached/less privileged through a multifaceted
-              approach focusing on Skill Development training, capacity building and other
-              development initiatives/Income generation activities.
+              Our Mission is to reach out to the unreached/less privileged through a multifaceted approach focusing 
+              on Skill Development training, capacity building and other development initiatives/Income generation activities.
             </p>
           </div>
         </div>
       </section>
 
-      {/* CORE VALUES */}
+      {/* CORE VALUES SECTION */}
       <section className="container mx-auto px-6 lg:px-16 py-20">
         <h2 className="text-4xl font-serif text-[#310000] text-center mb-12 border-b-2 border-[#3A2D2D]/20 inline-block pb-2">
           Our Core Values
@@ -214,6 +222,60 @@ const About = () => {
               <p className="text-gray-600 text-sm leading-relaxed">{val.text}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* CORPORATE & ESG SECTION */}
+      <section className="py-24 px-6 lg:px-20 bg-white border-t border-[#e5dfd3]">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="text-4xl font-serif text-[#310000] mb-6">Corporate ESG Partner</h2>
+            <p className="text-gray-700 text-lg mb-6">
+              We are a key sustainable partner for <strong>Bank, IT, and CSR sectors</strong>. 
+              Our initiatives fall under the <strong>ESG (Environment, Social, Governance)</strong> category, 
+              providing corporate gifting solutions that tell a story of sustainability.
+            </p>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <FaCheckCircle className="text-[#310000]" />
+                <span className="font-medium">Sustainable Corporate Gifting</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FaCheckCircle className="text-[#310000]" />
+                <span className="font-medium">CSR Community Impact Programs</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <FaCheckCircle className="text-[#310000]" />
+                <span className="font-medium">Zero-Waste Procurement Solutions</span>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#f7efe1] p-10 border border-[#e5dfd3]">
+            <h3 className="text-2xl font-serif text-[#310000] mb-6">The Naamb Project</h3>
+            <p className="text-gray-700 mb-4">
+              <strong>Naamb</strong> is our integrated waste collection and upcycling platform. 
+              Supported by Apsara Training Institute (MSME) since 2008 and Apsara Creations (TMEGP unit), 
+              Naamb is a <strong>0-Waste Initiative</strong> that transforms waste into wealth.
+            </p>
+            <div className="flex items-center gap-4 text-[#310000] font-bold">
+              <FaRecycle className="text-3xl" />
+              <span>Sustainable Wealth & Livelihood</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* EXPERIENCE CENTER GRID */}
+      <section className="bg-[#310000] py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-center text-[#f5e6ca] font-serif text-3xl mb-10">Visit Our Eco Hub</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {experienceItems.map((item, i) => (
+              <div key={i} className="border border-[#f5e6ca]/30 p-4 text-center text-white text-sm hover:bg-[#f5e6ca] hover:text-[#310000] transition duration-300">
+                {item}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -237,12 +299,6 @@ const About = () => {
               </p>
             </div>
           ))}
-          {/* 16+ Certifications Card */}
-          <div className="bg-white border border-[#e5dfd3] p-6 rounded-xl shadow-md hover:shadow-lg transition text-center flex flex-col items-center justify-center border-dashed border-2">
-             <FaPlusCircle className="text-3xl text-[#310000]/60 mb-3" />
-             <h4 className="text-2xl font-bold text-[#310000]">16+ Certifications</h4>
-             <p className="text-gray-500 text-sm italic">from National & State-level departments</p>
-          </div>
         </div>
       </section>
 
@@ -252,14 +308,13 @@ const About = () => {
           Empowering Skills, Building Futures
         </h2>
         <p className="text-gray-300 max-w-2xl mx-auto mb-8">
-          Join us in our mission to create opportunities, preserve culture, and
-          transform lives through education and skill.
+          Join the movement from Ottapalam to the world. Let's build a sustainable future together.
         </p>
         <button
           onClick={() => handleNavigate("/contact")}
           className="px-8 py-3 cursor-pointer bg-[#e5dfd3] text-[#3A2D2D] rounded-full font-bold tracking-wide hover:bg-gray-100 transition"
         >
-          Contact Us
+          Partner With Us
         </button>
       </section>
     </div>

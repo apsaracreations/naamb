@@ -153,7 +153,7 @@ const Header = () => {
               <img
                 src={Logo}
                 alt="Logo"
-                className="h-16 md:h-20 w-auto object-contain"
+                className="h-16 md:h-26 w-auto object-contain"
               />
             </button>
           </div>

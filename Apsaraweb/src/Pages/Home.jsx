@@ -6,6 +6,8 @@ import Logo from "../assets/Namb.png";
 import ClientHome from "../Components/ClientHome";
 import { useNavigate } from 'react-router-dom';
 import ShopPage from '../Components/ShopPage';
+import Home1 from "../assets/Home1.png";
+import Home2 from "../assets/Home2.jpg";
 
 const API_URL = import.meta.env.VITE_API_URL;
 const API_ROOT = API_URL.replace(/\/api\/?$/, "");
@@ -77,7 +79,7 @@ const Home = () => {
             {/* Warli Art Background */}
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{backgroundImage:"url('https://www.studyiq.com/articles/wp-content/uploads/2023/12/22181446/Warli-Art1.png')"}}
+              style={{ backgroundImage: `url(${Home1})` }}
             ></div>
             {/* Overlay */}
             <div className="absolute inset-0 bg-[#310000]/90 "></div>
@@ -226,7 +228,11 @@ const Home = () => {
     <div className="relative flex justify-center items-center min-h-[400px] lg:min-h-[600px] order-1 lg:order-2 group">
       {/* Background Image for Desktop */}
       <div className="hidden lg:block absolute inset-0 overflow-hidden shadow-2xl">
-        <div className="absolute inset-0 bg-[url('https://www.antiquesdealershop.com/wp-content/uploads/2024/06/IMG_5550-scaled.jpg')] bg-cover bg-center transition-transform duration-700 group-hover:scale-105"></div>
+<div
+  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+  style={{ backgroundImage: `url(${Home2})` }}
+></div>
+
         <div className="absolute inset-0 bg-[#310000]/70 mix-blend-multiply"></div>
       </div>
 
@@ -265,9 +271,7 @@ const Home = () => {
         <TrendingProducts />
         <div
           className="relative w-full py-14 px-6 md:px-16 bg-cover bg-center overflow-hidden"
-          style={{
-            backgroundImage: "url('https://www.studyiq.com/articles/wp-content/uploads/2023/12/22181446/Warli-Art1.png')",
-          }}
+          style={{ backgroundImage: `url(${Home1})`}}
         >
           <div className="absolute inset-0 bg-[#310000]/90"></div>
           <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 text-white">
