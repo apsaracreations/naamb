@@ -7,8 +7,14 @@ export const createCategory = async (req, res) => {
     const { name, bannerHeading, filters } = req.body;
 
     // Uploaded file paths
-    const bannerImage = req.files["bannerImage"]?.[0]?.path || "";
-    const headingImage = req.files["headingImage"]?.[0]?.path || "";
+    const bannerImage = req.files?.["bannerImage"]?.[0]?.path || "";
+    const headingImage = req.files?.["headingImage"]?.[0]?.path || "";
+
+    if (!name || !bannerHeading || !bannerImage || !headingImage) {
+      return res.status(400).json({
+        message: "Name, banner heading, banner image and heading image are all required",
+      });
+    }
 
     const category = new Category({
       name,

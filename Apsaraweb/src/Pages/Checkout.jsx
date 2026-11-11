@@ -271,19 +271,19 @@ const Checkout = () => {
       return;
     }
 
+    // Server looks up name, price and image from the database
     const productsForOrder = cartItems.map(item => ({
       productId: item.productId,
-      // name:item.name,
-      title: item.name,
-      price: item.price,
       quantity: item.quantity,
-      image: item.image,
     }));
 
     try {
       const res = await fetch(`${API_URL}/payment/create-order`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify({
           userId: user.id,
           shippingDetails,
@@ -308,7 +308,7 @@ const Checkout = () => {
           openRazorpay(data);
         }
       } else {
-        toast.error("Failed to create order. Please try again.", { autoClose: 10000, theme: "colored" });
+        toast.error(data.error || data.message || "Failed to create order. Please try again.", { autoClose: 10000, theme: "colored" });
         setIsPlacingOrder(false);
       }
     } catch (err) {

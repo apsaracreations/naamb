@@ -94,12 +94,12 @@ const OrdersTable = () => {
                       <td className="px-6 py-4 flex items-center space-x-4">
                         <img
                           src={product?.image ? buildImgSrc(product.image) : "/placeholder.png"}
-                          alt={product?.title}
+                          alt={product?.name || product?.title}
                           className="h-12 w-12 rounded-lg object-cover border"
                         />
-                        <span className="text-gray-900 font-semibold truncate max-w-[200px]">{product?.title}</span>
+                        <span className="text-gray-900 font-semibold truncate max-w-[200px]">{product?.name || product?.title}</span>
                       </td>
-                      <td className="px-6 py-4 font-bold text-gray-900">₹{product?.price}</td>
+                      <td className="px-6 py-4 font-bold text-gray-900">₹{order.totalAmount ?? product?.price}</td>
                       <td className="px-6 py-4 text-gray-600">{product?.quantity}</td>
                       <td className="px-6 py-4 text-sm text-gray-500">{formatDate(order.createdAt)}</td>
                       <td className="px-6 py-4">
@@ -125,11 +125,11 @@ const OrdersTable = () => {
                   <div className="flex items-center space-x-4 mb-4">
                     <img
                       src={product?.image ? buildImgSrc(product.image) : "/placeholder.png"}
-                      alt={product?.title}
+                      alt={product?.name || product?.title}
                       className="h-16 w-16 rounded-lg object-cover border"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-gray-900 font-bold truncate">{product?.title}</h3>
+                      <h3 className="text-gray-900 font-bold truncate">{product?.name || product?.title}</h3>
                       <p className="text-sm text-gray-500">{formatDate(order.createdAt)}</p>
                     </div>
                   </div>
@@ -137,7 +137,7 @@ const OrdersTable = () => {
                   <div className="grid grid-cols-2 gap-4 py-3 border-t border-b border-gray-50 text-sm">
                     <div>
                       <p className="text-gray-400">Paid Amount</p>
-                      <p className="font-bold text-gray-900">₹{product?.price}</p>
+                      <p className="font-bold text-gray-900">₹{order.totalAmount ?? product?.price}</p>
                     </div>
                     <div>
                       <p className="text-gray-400">Quantity</p>

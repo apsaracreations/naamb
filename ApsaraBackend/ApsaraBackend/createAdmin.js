@@ -10,8 +10,12 @@ const createAdmin = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Connected to MongoDB");
 
-    const username = "ApsaraCreations";
-    const password = "Krishnak@9656";
+    const username = process.env.ADMIN_USERNAME;
+    const password = process.env.ADMIN_PASSWORD;
+    if (!username || !password) {
+      console.log("Set ADMIN_USERNAME and ADMIN_PASSWORD env vars first.");
+      process.exit(1);
+    }
 
     // Check if admin already exists
     const existingAdmin = await Admin.findOne({ username });

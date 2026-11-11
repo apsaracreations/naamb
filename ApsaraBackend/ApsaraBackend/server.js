@@ -1,3 +1,6 @@
+import "./config/uploadsVolume.js"; // must stay first: routes create uploads/* on import
+import path from "path";
+import fs from "fs";
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
@@ -40,11 +43,19 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/payment", paymentRoutes);
 
-// 🧩 Define host and port manually
-const PORT = process.env.PORT || 5000;
-const HOST = "192.168.1.3";
+app.get("/api/health", (req, res) => res.json({ ok: true }));
+app.use("/api", (req, res) => res.status(404).json({ error: "Not found" }));
 
+// Serve the built storefront + admin (Apsaraweb/dist) from the same service.
+// Any non-API path falls back to index.html so React Router handles /admin, /product/:id, etc.
+const webDist = path.resolve("../../Apsaraweb/dist");
+if (fs.existsSync(path.join(webDist, "index.html"))) {
+  app.use(express.static(webDist));
+  app.get(/^(?!\/uploads\/).*/, (req, res) => res.sendFile(path.join(webDist, "index.html")));
+}
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running at http://192.168.1.3:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 

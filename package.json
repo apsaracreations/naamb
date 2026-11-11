@@ -1,0 +1,10 @@
+{
+  "name": "naamb",
+  "private": true,
+  "description": "Apsara Creations store - one Railway service: Express API + built React site",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "npm ci --prefix ApsaraBackend/ApsaraBackend --omit=dev && npm ci --prefix Apsaraweb && npm run build --prefix Apsaraweb",
+    "start": "cd ApsaraBackend/ApsaraBackend && node server.js"
+  }
+}

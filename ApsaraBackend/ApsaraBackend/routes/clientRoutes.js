@@ -1,9 +1,12 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
+import fs from "fs";
 import { addClient, getAllClients, deleteClient } from "../controllers/clientController.js";
+import { requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+
+fs.mkdirSync("uploads/clients", { recursive: true });
 
 // 🧩 Multer storage for client logos
 const storage = multer.diskStorage({
@@ -18,12 +21,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // 📤 Add client
-router.post("/add", upload.single("image"), addClient);
+router.post("/add", requireAdmin, upload.single("image"), addClient);
 
 // 📥 Get all clients
 router.get("/get", getAllClients);
 
 // ❌ Delete client
-router.delete("/delete/:id", deleteClient);
+router.delete("/delete/:id", requireAdmin, deleteClient);
 
 export default router;

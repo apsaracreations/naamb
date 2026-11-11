@@ -82,7 +82,9 @@ const Header = () => {
   }, [isShopOpen, isLoginOpen, isMobileMenuOpen]);
 
   const handleLogout = () => {
-    localStorage.clear();
+    // Only remove the customer session (keeps an admin logged in on the same browser)
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
     setCartCount(0);
     setIsMobileMenuOpen(false);

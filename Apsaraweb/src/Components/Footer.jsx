@@ -100,9 +100,17 @@ const policyTexts = {
 
         {/* ---------- BOTTOM SECTION ---------- */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
-          <p className="text-[11px] uppercase tracking-[0.2em] opacity-50 order-2 md:order-1">
-            © {new Date().getFullYear()} Naamb. All rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 order-2 md:order-1">
+            <p className="text-[11px] uppercase tracking-[0.2em] opacity-50">
+              © {new Date().getFullYear()} Naamb. All rights reserved.
+            </p>
+            <button
+              onClick={() => navigate("/admin")}
+              className="text-[11px] uppercase tracking-[0.2em] opacity-50 hover:opacity-100 hover:text-[#E6B17E] transition"
+            >
+              Admin Login
+            </button>
+          </div>
 
           {/* DEVELOPER PILL */}
           <div className="flex items-center gap-4 bg-white/5 px-6 py-3 rounded-full border border-white/10 order-1 md:order-2 shadow-lg group hover:border-[#E6B17E]/50 transition-all">

@@ -3,3 +3,5 @@ node_modules
 ApsaraAdmin/node_modules
 ApsaraBackend/node_modules
 Apsaraweb/node_modules
+Apsaraweb/dist
+.env.local

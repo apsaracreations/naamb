@@ -7,11 +7,13 @@ import {
   updateCategory,
   deleteCategory,
 } from "../controllers/categoryController.js";
+import { requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.post(
   "/add",
+  requireAdmin,
   upload.fields([
     { name: "bannerImage", maxCount: 1 },
     { name: "headingImage", maxCount: 1 },
@@ -23,6 +25,7 @@ router.get("/get", getCategories);
 router.get("/get/:id", getCategoryById); // 👈 single category API
 router.put(
   "/update/:id",
+  requireAdmin,
   upload.fields([
     { name: "bannerImage", maxCount: 1 },
     { name: "headingImage", maxCount: 1 },
@@ -30,6 +33,6 @@ router.put(
   updateCategory
 );
 
-router.delete("/delete/:id", deleteCategory);
+router.delete("/delete/:id", requireAdmin, deleteCategory);
 
 export default router;

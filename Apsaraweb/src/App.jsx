@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './Pages/Home';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
@@ -18,11 +18,17 @@ import WhatsAppButton from './Components/WhatsappButton';
 import { ToastContainer } from 'react-toastify';
 import TrackingOrder from './Pages/TrackingOrder';
 
+// Admin panel is only downloaded when someone opens /admin
+const AdminApp = lazy(() => import('./admin/AdminApp'));
+
 const App = () => {
+  const { pathname } = useLocation();
+  const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
+
   return (
     <div>
-      <ToastContainer hideProgressBar autoClose={1500} theme="colored" position="top-center" />
-      <Header />
+      {!isAdmin && <ToastContainer hideProgressBar autoClose={1500} theme="colored" position="top-center" />}
+      {!isAdmin && <Header />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<ShopPage />} />
@@ -38,10 +44,22 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/tracking" element={<TrackingOrder />} />
+        <Route
+          path="/admin/*"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-stone-50" />}>
+              <AdminApp />
+            </Suspense>
+          }
+        />
       </Routes>
-      <Footer />
-      <ScrollToTop />
-      <WhatsAppButton />
+      {!isAdmin && (
+        <>
+          <Footer />
+          <ScrollToTop />
+          <WhatsAppButton />
+        </>
+      )}
     </div>
   );
 };
