@@ -4,8 +4,10 @@ import { Plus, Search, Pencil, Trash2 } from "lucide-react";
 import { adminFetch, buildImgSrc, formatINR } from "../api";
 import {
   PageHeader, Card, Button, Badge, Thumb, EmptyState, LoadingRow, ConfirmModal, ImageLightbox,
-  Pagination, usePagination, inputCls, thCls, tdCls,
+  inputCls, thCls, tdCls,
 } from "../components/ui";
+import { usePagination } from "../components/usePagination";
+import { Pagination, PageSizeSelect } from "../components/Pagination";
 import ProductForm from "./ProductForm";
 
 const stockBadge = (qty) =>
@@ -47,7 +49,7 @@ const Products = () => {
     });
   }, [products, search, categoryFilter]);
 
-  const pager = usePagination(filtered, 10);
+  const pager = usePagination(filtered, "products");
   const categoryName = (p) => p.categoryId?.name || p.categoryName || "—";
 
   const doDelete = async () => {
@@ -75,7 +77,7 @@ const Products = () => {
     <>
       <PageHeader
         title="Products"
-        description={`${products.length} products in your store`}
+        description={`${products.length} product${products.length === 1 ? "" : "s"} in your store`}
         actions={<Button onClick={() => setFormProduct({})} disabled={!categories.length}><Plus className="h-4 w-4" /> Add product</Button>}
       />
 
@@ -86,15 +88,16 @@ const Products = () => {
       )}
 
       <Card bodyClassName="">
-        <div className="flex flex-col gap-3 border-b border-stone-200 p-4 sm:flex-row">
+        <div className="flex flex-col gap-3 border-b border-stone-200 p-4 md:flex-row md:items-center">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
             <input className={`${inputCls} pl-9`} placeholder="Search products" value={search} onChange={(e) => { setSearch(e.target.value); pager.setPage(1); }} />
           </div>
-          <select className={`${inputCls} sm:w-52`} value={categoryFilter} onChange={(e) => { setCategoryFilter(e.target.value); pager.setPage(1); }}>
+          <select className={`${inputCls} md:w-52`} value={categoryFilter} onChange={(e) => { setCategoryFilter(e.target.value); pager.setPage(1); }}>
             <option value="">All categories</option>
             {categories.map((c) => <option key={c._id} value={c._id}>{c.name}</option>)}
           </select>
+          <PageSizeSelect {...pager} />
         </div>
 
         {loading && !products.length ? (

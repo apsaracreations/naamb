@@ -3,8 +3,12 @@ import { FaUser, FaLock, FaEnvelope, FaTimes, FaEye, FaEyeSlash } from "react-ic
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { GoogleLogin } from '@react-oauth/google';
+import { useNavigate } from "react-router-dom";
 
-const Login = ({ onClose }) => {
+const Login = ({ onClose: onCloseProp }) => {
+  const navigate = useNavigate();
+  // Pop-up from the header passes onClose; the /login page goes back (or home) instead
+  const onClose = onCloseProp || (() => (window.history.length > 1 ? navigate(-1) : navigate("/")));
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -153,7 +157,7 @@ const Login = ({ onClose }) => {
                 onError={() => toast.error("Google Login Failed")}
                 theme="outline"
                 shape="pill"
-                width="100%"
+                width={280}
               />
             </div>
           </div>

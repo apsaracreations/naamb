@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { X, Loader2, ChevronLeft, ChevronRight, AlertTriangle, Inbox } from "lucide-react";
+import React, { useEffect } from "react";
+import { X, Loader2, AlertTriangle, Inbox } from "lucide-react";
 
 // ---------- Class tokens ----------
 const focus = "outline-none transition focus:border-[#310000] focus:ring-2 focus:ring-[#310000]/15";
@@ -127,41 +127,6 @@ export const LoadingRow = ({ label = "Loading…" }) => (
     <Loader2 className="h-4 w-4 animate-spin" /> {label}
   </div>
 );
-
-// ---------- Pagination ----------
-export const usePagination = (items, pageSize = 10) => {
-  const [page, setPage] = useState(1);
-  const pages = Math.max(1, Math.ceil(items.length / pageSize));
-  const current = Math.min(page, pages);
-  const start = (current - 1) * pageSize;
-  return { page: current, setPage, pages, pageItems: items.slice(start, start + pageSize), start, total: items.length, pageSize };
-};
-
-export const Pagination = ({ page, pages, setPage, start, total, pageSize }) => {
-  if (total === 0) return null;
-  return (
-    <div className="flex flex-col gap-3 border-t border-stone-200 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-xs text-stone-500">
-        Showing <span className="font-medium text-stone-700">{start + 1}</span>–
-        <span className="font-medium text-stone-700">{Math.min(start + pageSize, total)}</span> of{" "}
-        <span className="font-medium text-stone-700">{total}</span>
-      </p>
-      {pages > 1 && (
-        <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm" disabled={page === 1} onClick={() => setPage(page - 1)}>
-            <ChevronLeft className="h-4 w-4" /> Prev
-          </Button>
-          <span className="whitespace-nowrap px-1 text-xs text-stone-500">
-            Page {page} of {pages}
-          </span>
-          <Button variant="secondary" size="sm" disabled={page === pages} onClick={() => setPage(page + 1)}>
-            Next <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // ---------- Overlays ----------
 export const Modal = ({ open, onClose, title, children, footer, size = "md" }) => {

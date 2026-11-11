@@ -56,7 +56,8 @@ const ProductsListing = () => {
         setFilters(data.category?.filters || []);
 
         if (prod.length > 0) {
-          const max = Math.max(...prod.map((p) => p.price));
+          // Round up to the slider's ₹50 step so the dearest item is never cut off
+          const max = Math.ceil(Math.max(...prod.map((p) => p.price)) / 50) * 50;
           setMaxPrice(max);
           setPriceRange(max);
         } else {
@@ -107,6 +108,10 @@ const ProductsListing = () => {
           new Date(b.createdAt || 0).getTime() -
           new Date(a.createdAt || 0).getTime()
       );
+    } else if (sortBy === "price-asc") {
+      current.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-desc") {
+      current.sort((a, b) => b.price - a.price);
     } else if (sortBy === "oldest") {
       current.sort(
         (a, b) =>
@@ -209,6 +214,8 @@ const ProductsListing = () => {
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
                 <option value="none">Default Order</option>
               </select>
             </div>

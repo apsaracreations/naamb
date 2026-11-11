@@ -58,7 +58,7 @@ export const getAllProducts = async (req, res) => {
 const products = await Product.find().populate("categoryId");
     res.json(products);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Product error:", error); res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -71,7 +71,7 @@ export const getProductById = async (req, res) => {
 
     res.json(product);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Product error:", error); res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -109,7 +109,7 @@ export const updateProduct = async (req, res) => {
 
     res.json({ message: "Product updated successfully", product: updatedProduct });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Product error:", error); res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -120,6 +120,6 @@ export const deleteProduct = async (req, res) => {
     if (!product) return res.status(404).json({ message: "Product not found" });
     res.json({ message: "Product deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Product error:", error); res.status(500).json({ message: "Something went wrong" });
   }
 };

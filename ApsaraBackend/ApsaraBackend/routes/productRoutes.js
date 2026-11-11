@@ -1,6 +1,5 @@
 import express from "express";
-import multer from "multer";
-import fs from "fs";
+import { imageUpload } from "../middleware/imageUpload.js";
 import {
   addProduct,
   getAllProducts,
@@ -12,19 +11,7 @@ import { requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-fs.mkdirSync("uploads/products", { recursive: true });
-
-// 🧩 Multer storage config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/products");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const upload = multer({ storage });
+const upload = imageUpload("products");
 
 // ✅ Use upload middleware here to parse multipart/form-data
 router.post("/add", requireAdmin, upload.array("images", 5), addProduct);

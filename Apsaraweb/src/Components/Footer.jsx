@@ -113,12 +113,21 @@ const policyTexts = {
           </div>
 
           {/* DEVELOPER PILL */}
-          <div className="flex items-center gap-4 bg-white/5 px-6 py-3 rounded-full border border-white/10 order-1 md:order-2 shadow-lg group hover:border-[#E6B17E]/50 transition-all">
-            <span className="text-[10px] font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white/5 px-5 py-3 rounded-2xl sm:rounded-full border border-white/10 order-1 md:order-2 shadow-lg group hover:border-[#E6B17E]/50 transition-all">
+            <span className="text-[10px] font-bold uppercase tracking-widest opacity-70 flex items-center gap-2 whitespace-nowrap">
               <FaCode className="text-[#E6B17E]" /> Designed & Developed by
             </span>
-            <div className="h-4 w-[1px] bg-gray-600"></div>
-            <div className="flex gap-5 items-center">
+            <div className="hidden sm:block h-4 w-[1px] bg-gray-600"></div>
+            <a
+              href="https://vishnudev-k.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold tracking-wide text-[#E6B17E] whitespace-nowrap underline-offset-4 hover:underline hover:text-white transition-colors"
+            >
+              Vishnudev K
+            </a>
+            <div className="hidden sm:block h-4 w-[1px] bg-gray-600"></div>
+            <div className="flex w-full sm:w-auto justify-center gap-5 items-center">
               <a href="https://www.linkedin.com/in/vishnudevk2003/" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaLinkedin size={16}/></a>
               <a href="https://wa.me/919746653420" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaWhatsapp size={16}/></a>
               <a href="https://instagram.com/heeyyiii_" target="_blank" rel="noreferrer" className="text-white hover:text-[#E6B17E] transition-all hover:scale-125"><FaInstagram size={16}/></a>

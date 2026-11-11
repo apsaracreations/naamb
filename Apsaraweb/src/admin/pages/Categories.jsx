@@ -4,8 +4,10 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import { adminFetch, buildImgSrc, toList } from "../api";
 import {
   PageHeader, Card, Button, Badge, Thumb, EmptyState, LoadingRow, ConfirmModal, ImageLightbox,
-  Pagination, usePagination, thCls, tdCls,
+  thCls, tdCls,
 } from "../components/ui";
+import { usePagination } from "../components/usePagination";
+import { Pagination, PageSizeSelect } from "../components/Pagination";
 import CategoryForm from "./CategoryForm";
 
 const FilterChips = ({ filters }) => {
@@ -43,7 +45,7 @@ const Categories = () => {
     load();
   }, [load]);
 
-  const pager = usePagination(categories, 10);
+  const pager = usePagination(categories, "categories");
 
   const doDelete = async () => {
     setDeleting(true);
@@ -82,6 +84,12 @@ const Categories = () => {
       />
 
       <Card bodyClassName="">
+        {categories.length > 0 && (
+          <div className="flex items-center justify-between gap-3 border-b border-stone-200 p-4">
+            <p className="text-sm text-stone-500">{categories.length} categor{categories.length === 1 ? "y" : "ies"}</p>
+            <PageSizeSelect {...pager} />
+          </div>
+        )}
         {loading && !categories.length ? (
           <LoadingRow label="Loading categories…" />
         ) : !categories.length ? (

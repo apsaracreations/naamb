@@ -228,6 +228,7 @@ const Checkout = () => {
           if (verifyData.success) {
             toast.success("Payment successful! Order placed.", { autoClose: 10000, theme: "colored" });
             setShowBillModal(true);
+            window.dispatchEvent(new Event("cartUpdated")); // server cleared the cart: refresh header badge
           } else {
             toast.error("Payment verification failed.", { autoClose: 10000, theme: "colored" });
           }

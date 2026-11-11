@@ -14,19 +14,39 @@ import userRoutes from "./routes/userRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import { razorpayWebhook } from "./controllers/razorpayWebhook.js";
+import { securityHeaders, authLimiter, apiLimiter, sanitizeBody } from "./middleware/security.js";
 
 dotenv.config();
 const app = express();
+app.set("trust proxy", 1); // Railway/Render sit behind one proxy: needed for correct client IPs in rate limits
+app.disable("x-powered-by");
+app.use(securityHeaders);
 
-app.use(express.json());
+// CORS: set CORS_ORIGINS (comma-separated, e.g. "https://naamb.in") to lock the API to
+// your own site. Unset = open, which keeps a separately hosted front-end (Render) working.
+// Auth uses Bearer tokens, not cookies, so open CORS can't be used to ride a user's login.
+const allowed = (process.env.CORS_ORIGINS || "").split(",").map((o) => o.trim()).filter(Boolean);
+app.use(cors({ origin: (origin, cb) => cb(null, !allowed.length || !origin || allowed.includes(origin)) }));
 
-// Serve images
-app.use("/uploads", express.static("uploads"));
+// Razorpay webhook needs the raw body for its signature, so it goes before express.json()
+app.post("/api/payment/webhook", express.raw({ type: "application/json", limit: "1mb" }), razorpayWebhook);
 
-// ✅ Enable CORS for all origins
-app.use(cors()); // Just this line is enough to allow all origins
+app.use(express.json({ limit: "1mb" }));
+app.use(sanitizeBody);
+
+// Serve images (never let the browser guess a different file type)
+app.use("/uploads", express.static("uploads", { dotfiles: "deny", index: false }));
+
+app.use("/api", apiLimiter);
+app.use(["/api/admin/login", "/api/users/login", "/api/users/register", "/api/users/google-login"], authLimiter);
 
 // ✅ MongoDB Connection
+if (!process.env.JWT_SECRET || !process.env.MONGO_URI) {
+  console.error("MONGO_URI and JWT_SECRET must be set");
+  process.exit(1);
+}
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
@@ -45,6 +65,17 @@ app.use("/api/payment", paymentRoutes);
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 app.use("/api", (req, res) => res.status(404).json({ error: "Not found" }));
+
+// Upload errors (wrong file type / too large) and any other unhandled error
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  if (err?.code === "LIMIT_FILE_SIZE") return res.status(400).json({ message: "Image must be under 5 MB" });
+  if (err?.message?.startsWith("Only JPG")) return res.status(400).json({ message: err.message });
+  if (err?.type === "entity.too.large") return res.status(413).json({ message: "Request too large" });
+  if (err?.type === "entity.parse.failed") return res.status(400).json({ message: "Invalid JSON" });
+  console.error("Unhandled error:", err);
+  res.status(500).json({ message: "Something went wrong" });
+});
 
 // Serve the built storefront + admin (Apsaraweb/dist) from the same service.
 // Any non-API path falls back to index.html so React Router handles /admin, /product/:id, etc.

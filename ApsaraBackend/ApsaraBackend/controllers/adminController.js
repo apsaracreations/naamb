@@ -4,14 +4,12 @@ import Admin from "../models/Admin.js";
 
 export const loginAdmin = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const username = typeof req.body.username === "string" ? req.body.username.trim() : "";
+    const password = typeof req.body.password === "string" ? req.body.password : "";
+    if (!username || !password) return res.status(401).json({ message: "Invalid credentials" });
 
     const admin = await Admin.findOne({ username });
-    if (!admin) {
-      return res.status(404).json({ message: "Admin not found" });
-    }
-
-    const isMatch = await bcrypt.compare(password, admin.password);
+    const isMatch = admin ? await bcrypt.compare(password, admin.password) : false;
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -25,6 +23,7 @@ export const loginAdmin = async (req, res) => {
       token,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Admin login error:", error);
+    res.status(500).json({ message: "Login failed" });
   }
 };

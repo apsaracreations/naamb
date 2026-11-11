@@ -1,7 +1,7 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import Order from "../models/Order.js";
-import Cart from "../models/Cart.js";
+import { markOrderPaid } from "../services/orderPayment.js";
 import Product from "../models/Product.js";
 
 const SHIPPING_STATUSES = ["Pending", "Packed", "Shipped", "Delivered"];
@@ -97,27 +97,17 @@ export const verifyPayment = async (req, res) => {
       .update(`${razorpayOrderId}|${razorpayPaymentId}`)
       .digest("hex");
 
-    if (razorpaySignature !== expectedSign) {
+    const sigOk =
+      typeof razorpaySignature === "string" &&
+      razorpaySignature.length === expectedSign.length &&
+      crypto.timingSafeEqual(Buffer.from(razorpaySignature), Buffer.from(expectedSign));
+    if (!sigOk) {
       return res.status(400).json({ success: false, message: "Payment verification failed" });
     }
 
-    // Atomically flip pending → paid so a retried/duplicate call can't reduce stock twice
-    const order = await Order.findOneAndUpdate(
-      { razorpayOrderId, status: { $ne: "paid" } },
-      { razorpayPaymentId, razorpaySignature, status: "paid" },
-      { new: true }
-    );
-
-    if (!order) {
-      const existing = await Order.findOne({ razorpayOrderId });
-      if (!existing) return res.status(404).json({ success: false, message: "Order not found" });
-      return res.json({ success: true, message: "Payment already verified" });
-    }
-
-    for (const item of order.products) {
-      await Product.findByIdAndUpdate(item.productId, { $inc: { quantity: -item.quantity } });
-    }
-    await Cart.findOneAndDelete({ user: order.user });
+    const result = await markOrderPaid(razorpayOrderId, razorpayPaymentId, razorpaySignature);
+    if (result === "not_found") return res.status(404).json({ success: false, message: "Order not found" });
+    if (result === "already_paid") return res.json({ success: true, message: "Payment already verified" });
 
     res.json({ success: true, message: "Payment verified, stock updated, and cart cleared" });
   } catch (err) {

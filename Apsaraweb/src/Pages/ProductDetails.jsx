@@ -81,9 +81,14 @@ const ProductDetails = () => {
   useEffect(() => {
     setLoading(true);
     fetch(`${API_URL}/products/get/${productId}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        const data = await res.json().catch(() => null);
+        return res.ok && data?._id ? data : null; // deleted / wrong link → "Product not found"
+      })
       .then((data) => {
         setProduct(data);
+        if (!data) return setLoading(false);
+        setQuantity(1);
         setSelectedImage(
           data.images && data.images.length > 0
             ? { url: buildImgSrc(data.images[0]), alt: data.name }
@@ -103,13 +108,14 @@ const ProductDetails = () => {
 
   const handleQuantityChange = (type) => {
     setQuantity((prev) => {
-      if (type === "increment") return prev + 1;
+      if (type === "increment") return Math.min(prev + 1, Math.max(product?.quantity || 0, 1));
       if (type === "decrement" && prev > 1) return prev - 1;
       return prev;
     });
   };
 
   const handleAddToCart = async (shouldRedirect = false) => {
+    if (!product || product.quantity < 1) return;
     const userToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 
@@ -273,10 +279,15 @@ const ProductDetails = () => {
               <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full justify-between sm:w-max">
                 <button onClick={() => handleQuantityChange("decrement")} className="p-4 bg-gray-50 hover:bg-gray-100 disabled:opacity-50" disabled={quantity <= 1}><Minus className="w-4 h-4" /></button>
                 <span className="px-8 font-bold text-[#310000] min-w-[3rem] text-center">{quantity}</span>
-                <button onClick={() => handleQuantityChange("increment")} className="p-4 bg-gray-50 hover:bg-gray-100"><Plus className="w-4 h-4" /></button>
+                <button onClick={() => handleQuantityChange("increment")} className="p-4 bg-gray-50 hover:bg-gray-100 disabled:opacity-50" disabled={quantity >= product.quantity}><Plus className="w-4 h-4" /></button>
               </div>
 
               {/* Responsive Button Group */}
+              {product.quantity < 1 ? (
+                <div className="w-full rounded-lg border border-red-200 bg-red-50 py-4 text-center text-xs font-bold uppercase tracking-widest text-red-700">
+                  Out of stock
+                </div>
+              ) : (
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => handleAddToCart(false)}
@@ -294,6 +305,7 @@ const ProductDetails = () => {
                   <span>Buy It Now — {totalPrice}</span>
                 </button>
               </div>
+              )}
             </div>
 
             <div className="mt-6 p-4 bg-gray-50 border border-gray-100 rounded-lg text-[11px] sm:text-xs text-gray-600 space-y-2">

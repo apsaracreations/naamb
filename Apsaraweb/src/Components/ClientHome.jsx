@@ -48,12 +48,10 @@ const [formData, setFormData] = useState({
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  console.log("Submitting data:", formData);
-
   try {
     const res = await fetch(`${API_BASE}/reviews/add`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("token")}` },
       body: JSON.stringify(formData),
     });
 

@@ -75,7 +75,7 @@ const Clients = () => {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const [c, r] = await Promise.all([adminFetch("/clients/get"), adminFetch("/reviews/all")]);
+      const [c, r] = await Promise.all([adminFetch("/clients/get"), adminFetch("/reviews/admin/all")]);
       setClients(Array.isArray(c) ? c : []);
       setReviews(Array.isArray(r) ? r : []);
     } catch (err) {
@@ -114,7 +114,7 @@ const Clients = () => {
       />
 
       <div className="space-y-6">
-        <Card title="Clients" subtitle={`${clients.length} partner logos`}>
+        <Card title="Clients" subtitle={`${clients.length} partner logo${clients.length === 1 ? "" : "s"}`}>
           {loading && !clients.length ? (
             <LoadingRow />
           ) : !clients.length ? (
@@ -136,7 +136,7 @@ const Clients = () => {
           )}
         </Card>
 
-        <Card title="Customer reviews" subtitle={`${reviews.length} reviews submitted from the website`}>
+        <Card title="Customer reviews" subtitle={`${reviews.length} review${reviews.length === 1 ? "" : "s"} from the website`}>
           {loading && !reviews.length ? (
             <LoadingRow />
           ) : !reviews.length ? (

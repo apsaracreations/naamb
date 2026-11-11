@@ -27,7 +27,7 @@ export const createCategory = async (req, res) => {
     await category.save();
     res.status(201).json({ message: "Category created successfully", category });
   } catch (err) {
-    res.status(500).json({ message: "Error creating category", error: err.message });
+    console.error("Error creating category", err); res.status(500).json({ message: "Error creating category" });
   }
 };
 
@@ -37,7 +37,7 @@ export const getCategories = async (req, res) => {
     const categories = await Category.find().sort({ createdAt: -1 });
     res.json(categories);
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("Server Error", error); res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -66,7 +66,7 @@ const category = await Category.findByIdAndUpdate(id, updateData, { new: true })
 
     res.json({ message: "Category updated successfully", category });
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("Server Error", error); res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -92,7 +92,7 @@ export const getCategoryById = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("Server Error", error); res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -115,7 +115,7 @@ export const deleteCategory = async (req, res) => {
     res.json({ message: "Category and its products deleted successfully" });
 
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("Server Error", error); res.status(500).json({ message: "Server Error" });
   }
 };
 

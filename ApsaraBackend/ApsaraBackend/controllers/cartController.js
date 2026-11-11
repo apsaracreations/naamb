@@ -2,8 +2,10 @@ import Cart from "../models/Cart.js";
 
 export const addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const { userId, productId } = req.body;
+    const quantity = req.body.quantity === undefined ? 1 : Math.floor(Number(req.body.quantity));
     if (!userId || !productId) return res.status(400).json({ message: "Missing required fields" });
+    if (!(quantity >= 1 && quantity <= 100)) return res.status(400).json({ message: "Invalid quantity" });
 
     let cart = await Cart.findOne({ user: userId });
 
@@ -21,7 +23,8 @@ export const addToCart = async (req, res) => {
     await cart.save();
     res.status(200).json({ message: "Product added to cart", cart });
   } catch (error) {
-    res.status(500).json({ message: "Error adding to cart", error });
+    console.error("Error adding to cart", error);
+    res.status(500).json({ message: "Error adding to cart" });
   }
 };
 
@@ -34,7 +37,8 @@ export const getCart = async (req, res) => {
       .populate("products.productId"); // populate full product details
     res.status(200).json(cart || { products: [] });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching cart", error });
+    console.error("Error fetching cart", error);
+    res.status(500).json({ message: "Error fetching cart" });
   }
 };
 
@@ -43,8 +47,9 @@ export const getCart = async (req, res) => {
 // PUT /api/cart/update
 export const updateCartQuantity = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
-    if (!userId || !productId || quantity < 1) 
+    const { userId, productId } = req.body;
+    const quantity = Math.floor(Number(req.body.quantity));
+    if (!userId || !productId || !(quantity >= 1 && quantity <= 100)) 
       return res.status(400).json({ message: "Invalid request" });
 
     let cart = await Cart.findOne({ user: userId });
@@ -59,7 +64,8 @@ export const updateCartQuantity = async (req, res) => {
       res.status(404).json({ message: "Product not found in cart" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error updating quantity", error });
+    console.error("Error updating quantity", error);
+    res.status(500).json({ message: "Error updating quantity" });
   }
 };
 
@@ -77,7 +83,8 @@ export const removeFromCart = async (req, res) => {
 
     res.status(200).json({ message: "Product removed from cart", cart });
   } catch (error) {
-    res.status(500).json({ message: "Error removing product", error });
+    console.error("Error removing product", error);
+    res.status(500).json({ message: "Error removing product" });
   }
 };
 

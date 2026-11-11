@@ -4,8 +4,10 @@ import { Search, ShoppingBag, Clock, Truck, IndianRupee, RefreshCw } from "lucid
 import { adminFetch, buildImgSrc, formatDate, formatINR, SHIPPING_STATUSES, statusTone } from "../api";
 import {
   PageHeader, Card, StatCard, Button, Badge, Thumb, EmptyState, LoadingRow,
-  Pagination, usePagination, inputCls, thCls, tdCls,
+  inputCls, thCls, tdCls,
 } from "../components/ui";
+import { usePagination } from "../components/usePagination";
+import { Pagination, PageSizeSelect } from "../components/Pagination";
 import OrderDetailsModal from "./OrderDetailsModal";
 
 const Orders = () => {
@@ -47,7 +49,7 @@ const Orders = () => {
       });
   }, [orders, search, statusFilter, sort]);
 
-  const pager = usePagination(filtered, 10);
+  const pager = usePagination(filtered, "orders");
 
   const stats = useMemo(() => ({
     toShip: orders.filter((o) => ["Pending", "Packed"].includes(o.shippingStatus || "Pending")).length,
@@ -96,6 +98,7 @@ const Orders = () => {
               <option value="newest">Newest first</option>
               <option value="oldest">Oldest first</option>
             </select>
+            <PageSizeSelect {...pager} className="col-span-2 md:col-span-1" />
           </div>
         </div>
 
